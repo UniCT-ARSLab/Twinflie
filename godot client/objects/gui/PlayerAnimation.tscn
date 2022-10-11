@@ -1,0 +1,59 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://scripts/gui/PlayerAnimation.gd" type="Script" id=1]
+
+[node name="PlayerAnimation" type="Control"]
+anchor_left = 0.0166016
+anchor_top = 0.915
+anchor_right = 0.431641
+anchor_bottom = 0.975
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_top = -0.056
+anchor_right = 0.854
+anchor_bottom = 1.056
+margin_top = -0.984
+margin_right = 0.0499878
+margin_bottom = -1.016
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
+margin_right = 363.0
+margin_bottom = 40.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Slider" type="HSlider" parent="VBoxContainer/HBoxContainer"]
+visible = false
+margin_right = 250.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 250, 40 )
+rounded = true
+ticks_on_borders = true
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ProgressBar" type="ProgressBar" parent="VBoxContainer/HBoxContainer"]
+margin_right = 200.0
+margin_bottom = 40.0
+rect_min_size = Vector2( 200, 40 )
+
+[node name="PlayButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 204.0
+margin_right = 314.0
+margin_bottom = 40.0
+text = "Test Navigation"
+
+[connection signal="value_changed" from="VBoxContainer/HBoxContainer/Slider" to="." method="_on_Slider_value_changed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/PlayButton" to="." method="_on_PlayButton_pressed"]

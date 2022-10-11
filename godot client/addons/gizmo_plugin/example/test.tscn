@@ -1,0 +1,97 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://addons/gizmo_plugin/Viewport_Controls.gd" type="Script" id=1]
+[ext_resource path="res://addons/gizmo_plugin/scenes/3D Gizmo.tscn" type="PackedScene" id=2]
+
+[sub_resource type="CubeMesh" id=1]
+size = Vector3( 5, 5, 5 )
+
+[sub_resource type="SpatialMaterial" id=2]
+albedo_color = Color( 0.741176, 0.160784, 0.709804, 1 )
+roughness = 0.0
+
+[sub_resource type="Environment" id=3]
+fog_height_min = 0.0
+fog_height_max = 100.0
+ssao_quality = 0
+
+[sub_resource type="CubeMesh" id=4]
+
+[sub_resource type="SpatialMaterial" id=5]
+albedo_color = Color( 0.619608, 0.603922, 0.792157, 1 )
+
+[node name="Spatial" type="Spatial"]
+
+[node name="ViewportContainer" type="ViewportContainer" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+size_flags_horizontal = 3
+size_flags_vertical = 3
+stretch = true
+script = ExtResource( 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+cameraPath = NodePath("Viewport/Camera")
+
+[node name="Viewport" type="Viewport" parent="ViewportContainer"]
+size = Vector2( 1024, 600 )
+transparent_bg = true
+handle_input_locally = false
+render_target_update_mode = 3
+physics_object_picking = true
+gui_snap_controls_to_pixels = false
+
+[node name="MeshInstance2" type="MeshInstance" parent="ViewportContainer/Viewport"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.90129, 0 )
+mesh = SubResource( 1 )
+material/0 = SubResource( 2 )
+
+[node name="3D Gizmo" parent="ViewportContainer/Viewport/MeshInstance2" instance=ExtResource( 2 )]
+
+[node name="Camera" type="Camera" parent="ViewportContainer/Viewport"]
+transform = Transform( 0.707107, -0.298836, 0.640856, 0, 0.906308, 0.422618, -0.707107, -0.298836, 0.640856, 49.4969, 31.8644, 47.4133 )
+environment = SubResource( 3 )
+current = true
+fov = 50.0
+size = 100.0
+near = 0.01
+far = 200.0
+
+[node name="MeshInstance" type="MeshInstance" parent="ViewportContainer/Viewport"]
+transform = Transform( 72.2792, 0, 0, 0, 1, 0, 0, 0, 48.3969, 0, -6.27164, 0 )
+mesh = SubResource( 4 )
+material/0 = SubResource( 5 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="ViewportContainer/Viewport"]
+transform = Transform( 0.777607, -0.492816, 0.390461, 0, 0.621011, 0.783802, -0.628751, -0.60949, 0.482903, 31.8977, 74.5979, 57.7884 )
+light_energy = 1.21
+shadow_enabled = true
+directional_shadow_max_distance = 256.1
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+visible = false
+margin_right = 40.0
+margin_bottom = 40.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="VBoxContainer"]
+margin_right = 203.0
+margin_bottom = 14.0
+text = "Right-Click + Drag: Rotate Scene"
+
+[node name="Label2" type="Label" parent="VBoxContainer"]
+margin_top = 18.0
+margin_right = 203.0
+margin_bottom = 32.0
+text = "Middle-Click + Drag: Pan Scene"
+
+[node name="Label3" type="Label" parent="VBoxContainer"]
+margin_top = 36.0
+margin_right = 203.0
+margin_bottom = 50.0
+text = "Mouse Wheel: Zoom In/Out"
+
+[connection signal="gui_input" from="ViewportContainer" to="ViewportContainer" method="gui_input"]

@@ -1,0 +1,186 @@
+[gd_scene load_steps=8 format=2]
+
+[ext_resource path="res://objects/MousePointer.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scripts/FPSCamera.gd" type="Script" id=3]
+[ext_resource path="res://scripts/network_scene/SceneManager.gd" type="Script" id=4]
+[ext_resource path="res://scripts/network_scene/GUIManager.gd" type="Script" id=5]
+[ext_resource path="res://objects/Floor.tscn" type="PackedScene" id=7]
+
+[sub_resource type="ProceduralSky" id=1]
+sky_top_color = Color( 0.321569, 0.529412, 0.847059, 1 )
+sky_horizon_color = Color( 0.662745, 0.776471, 0.866667, 1 )
+ground_bottom_color = Color( 0.321569, 0.529412, 0.847059, 1 )
+ground_horizon_color = Color( 0.662745, 0.776471, 0.866667, 1 )
+
+[sub_resource type="Environment" id=2]
+background_mode = 2
+background_sky = SubResource( 1 )
+ambient_light_color = Color( 0.588235, 0.588235, 0.588235, 1 )
+ambient_light_energy = 0.65
+ambient_light_sky_contribution = 0.41
+tonemap_mode = 3
+tonemap_white = 1.15
+ssao_enabled = true
+ssao_intensity = 4.38
+ssao_light_affect = 0.2
+glow_intensity = 4.09
+adjustment_enabled = true
+adjustment_contrast = 1.15
+
+[node name="World" type="Spatial"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.163196, 0.56687, 0 )
+
+[node name="SceneManager" type="Node" parent="."]
+script = ExtResource( 4 )
+
+[node name="HTTPRequest" type="HTTPRequest" parent="SceneManager"]
+
+[node name="Environment" type="Spatial" parent="."]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="Environment"]
+environment = SubResource( 2 )
+
+[node name="DirectionalLight" type="DirectionalLight" parent="Environment"]
+transform = Transform( 0.866025, 0.25, -0.433013, 0, 0.866025, 0.5, 0.5, -0.433013, 0.75, -3.97148, 2.3619, 6.64385 )
+shadow_enabled = true
+
+[node name="Floor" parent="." instance=ExtResource( 7 )]
+transform = Transform( 2, 0, 0, 0, 1, 0, 0, 0, 1.5, 0, -1.15861, 0 )
+
+[node name="MousePointer" parent="." instance=ExtResource( 2 )]
+objectsNodes = NodePath("../Drones")
+cameraPath = NodePath("../Camera")
+drawEnabled = false
+
+[node name="Camera" type="Camera" parent="."]
+transform = Transform( 0.999976, -0.00481041, 0.00505949, 0, 0.724721, 0.689043, -0.0069813, -0.689026, 0.724703, -0.138187, 2.9032, 3.80519 )
+current = true
+script = ExtResource( 3 )
+sensitivity = 0.5
+
+[node name="Drones" type="Spatial" parent="."]
+
+[node name="GUIContainer" type="Control" parent="."]
+anchor_right = 1.0
+anchor_bottom = 1.0
+mouse_filter = 2
+script = ExtResource( 5 )
+
+[node name="MainMenu" type="Control" parent="GUIContainer"]
+anchor_top = 0.871
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_top = -523.491
+margin_bottom = -0.890869
+mouse_filter = 2
+
+[node name="PanelContainer" type="PanelContainer" parent="GUIContainer/MainMenu"]
+anchor_top = 0.9
+anchor_right = 1.0
+anchor_bottom = 1.0
+margin_left = 7.0
+margin_right = -8.0
+margin_bottom = -7.0
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GUIContainer/MainMenu/PanelContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 1002.0
+margin_bottom = 46.0001
+custom_constants/separation = 2
+alignment = 2
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="StartButton" type="Button" parent="GUIContainer/MainMenu/PanelContainer/HBoxContainer"]
+margin_left = 830.0
+margin_right = 871.0
+margin_bottom = 39.0
+text = "Start"
+
+[node name="PauseButton" type="Button" parent="GUIContainer/MainMenu/PanelContainer/HBoxContainer"]
+margin_left = 873.0
+margin_right = 923.0
+margin_bottom = 39.0
+text = "Pause"
+
+[node name="VSeparator" type="VSeparator" parent="GUIContainer/MainMenu/PanelContainer/HBoxContainer"]
+margin_left = 925.0
+margin_right = 929.0
+margin_bottom = 39.0
+
+[node name="ConnectButton" type="Button" parent="GUIContainer/MainMenu/PanelContainer/HBoxContainer"]
+margin_left = 931.0
+margin_right = 995.0
+margin_bottom = 39.0
+text = "Connect"
+
+[node name="DisconnectButton" type="Button" parent="GUIContainer/MainMenu/PanelContainer/HBoxContainer"]
+visible = false
+margin_left = 911.0
+margin_right = 995.0
+margin_bottom = 39.0
+text = "Disconnect"
+
+[node name="HttpDialog" type="WindowDialog" parent="GUIContainer"]
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+margin_left = -170.0
+margin_top = -45.0
+margin_right = 170.0
+margin_bottom = 44.0
+window_title = "HTTP Connection"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="VBoxContainer" type="VBoxContainer" parent="GUIContainer/HttpDialog"]
+anchor_left = 0.027027
+anchor_top = 0.0481283
+anchor_right = 0.982801
+anchor_bottom = 0.962567
+alignment = 1
+__meta__ = {
+"_edit_use_anchors_": true
+}
+
+[node name="HBoxContainer" type="HBoxContainer" parent="GUIContainer/HttpDialog/VBoxContainer"]
+margin_top = 16.0
+margin_right = 324.0
+margin_bottom = 40.0
+grow_horizontal = 2
+alignment = 1
+
+[node name="Label" type="Label" parent="GUIContainer/HttpDialog/VBoxContainer/HBoxContainer"]
+margin_left = 23.0
+margin_top = 5.0
+margin_right = 96.0
+margin_bottom = 19.0
+text = "IP Address:"
+
+[node name="LineEdit" type="LineEdit" parent="GUIContainer/HttpDialog/VBoxContainer/HBoxContainer"]
+margin_left = 100.0
+margin_right = 300.0
+margin_bottom = 24.0
+grow_horizontal = 2
+rect_min_size = Vector2( 200, 0 )
+placeholder_text = "localhost:8080"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ConnectDialogButton" type="Button" parent="GUIContainer/HttpDialog/VBoxContainer"]
+margin_top = 44.0
+margin_right = 324.0
+margin_bottom = 64.0
+text = "Connect"
+
+[connection signal="pressed" from="GUIContainer/MainMenu/PanelContainer/HBoxContainer/ConnectButton" to="GUIContainer" method="_on_ConnectButton_pressed"]
+[connection signal="pressed" from="GUIContainer/MainMenu/PanelContainer/HBoxContainer/DisconnectButton" to="GUIContainer" method="_on_DisconnectButton_pressed"]
+[connection signal="pressed" from="GUIContainer/HttpDialog/VBoxContainer/ConnectDialogButton" to="GUIContainer" method="_on_ConnectDialogButton_pressed"]

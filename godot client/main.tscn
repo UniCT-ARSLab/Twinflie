@@ -1,0 +1,22 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://addons/LineRenderer/LineRenderer.tscn" type="PackedScene" id=1]
+[ext_resource path="res://line.png" type="Texture" id=2]
+[ext_resource path="res://camera.gd" type="Script" id=3]
+
+[sub_resource type="SpatialMaterial" id=1]
+flags_transparent = true
+flags_unshaded = true
+albedo_color = Color( 0.969482, 1, 0.609375, 1 )
+albedo_texture = ExtResource( 2 )
+
+[node name="Spatial" type="Spatial"]
+
+[node name="LineRenderer" parent="." instance=ExtResource( 1 )]
+material_override = SubResource( 1 )
+
+[node name="Orbit" type="Spatial" parent="."]
+
+[node name="Camera" type="Camera" parent="Orbit"]
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 2 )
+script = ExtResource( 3 )

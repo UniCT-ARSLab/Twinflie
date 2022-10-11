@@ -1,0 +1,71 @@
+; Engine configuration file.
+; It's best edited using the editor UI and not directly,
+; since the parameters that go here are not all obvious.
+;
+; Format:
+;   [section] ; section goes between []
+;   param=value ; assign values to parameters
+
+config_version=4
+
+_global_script_classes=[ {
+"base": "Spatial",
+"class": "MousePointer",
+"language": "GDScript",
+"path": "res://scripts/MousePointer.gd"
+}, {
+"base": "Spatial",
+"class": "NetworkDrone",
+"language": "GDScript",
+"path": "res://scripts/network_scene/NetworkDrone.gd"
+}, {
+"base": "Spatial",
+"class": "TouchObject",
+"language": "GDScript",
+"path": "res://scripts/TouchObject.gd"
+} ]
+_global_script_class_icons={
+"MousePointer": "",
+"NetworkDrone": "",
+"TouchObject": ""
+}
+
+[application]
+
+config/name="Decawave Drones"
+run/main_scene="res://scenes/network_scene.tscn"
+config/icon="res://icon.png"
+
+[autoload]
+
+SelectionManager="*res://scripts/SelectionManager.gd"
+GuiManager="*res://scripts/GUIManager.gd"
+SceneManager="*res://scripts/SceneManager.gd"
+SceneManagerNetwork="*res://scripts/network_scene/SceneManager.gd"
+DroneManager="*res://scripts/DroneManager.gd"
+
+[display]
+
+window/stretch/aspect="expand"
+
+[editor_plugins]
+
+enabled=PoolStringArray( "res://addons/SingletonScriptsShortcut/plugin.cfg" )
+
+[input_devices]
+
+pointing/emulate_touch_from_mouse=true
+
+[layer_names]
+
+3d_physics/layer_1="objects"
+3d_physics/layer_2="drone collisions"
+3d_physics/layer_3="floor"
+
+[physics]
+
+common/enable_pause_aware_picking=true
+
+[rendering]
+
+environment/default_environment="res://default_env.tres"

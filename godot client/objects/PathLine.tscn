@@ -1,0 +1,33 @@
+[gd_scene load_steps=5 format=2]
+
+[ext_resource path="res://addons/LineRenderer/LineRenderer.tscn" type="PackedScene" id=2]
+[ext_resource path="res://scripts/PathLine.gd" type="Script" id=3]
+
+[sub_resource type="SpatialMaterial" id=1]
+flags_transparent = true
+flags_unshaded = true
+albedo_color = Color( 0.196078, 0.796078, 0.0705882, 1 )
+
+[sub_resource type="SpatialMaterial" id=2]
+flags_unshaded = true
+albedo_color = Color( 0.529412, 0.0823529, 0.862745, 1 )
+
+[node name="PathLine" type="Spatial"]
+script = ExtResource( 3 )
+
+[node name="Points" type="Spatial" parent="."]
+visible = false
+
+[node name="LineRenderer" parent="." instance=ExtResource( 2 )]
+material_override = SubResource( 1 )
+points = [  ]
+startThickness = 0.01
+endThickness = 0.01
+cornerSmooth = 10
+
+[node name="LineRendererGhost" parent="." instance=ExtResource( 2 )]
+material_override = SubResource( 2 )
+points = [  ]
+startThickness = 0.01
+endThickness = 0.01
+cornerSmooth = 10
