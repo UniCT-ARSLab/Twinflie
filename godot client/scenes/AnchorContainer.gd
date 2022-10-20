@@ -3,11 +3,11 @@ extends Spatial
 onready var anchor = preload("res://objects/Anchor.tscn")
 
 var ancore=[]
-
+var http
 
 func _ready():
 	
-	var http=HTTPRequest.new()
+	http=HTTPRequest.new()
 	
 	add_child(http)
 	#http.set_use_threads(true)
@@ -29,7 +29,9 @@ func _http_request_completed(result, response_code, headers, body):
 			ancore.append(objAnchor)
 			
 			objAnchor.global_transform.origin.x=float(response[str(i)]["pos"].split(",")[0])
-			objAnchor.global_transform.origin.y=float(response[str(i)]["pos"].split(",")[1])
-			objAnchor.global_transform.origin.z=float(response[str(i)]["pos"].split(",")[2])
+			objAnchor.global_transform.origin.y=float(response[str(i)]["pos"].split(",")[2])
+			objAnchor.global_transform.origin.z=float(response[str(i)]["pos"].split(",")[1])
 			
-			print(i,float(response[str(i)]["pos"].split(",")[0]),float(response[str(i)]["pos"].split(",")[1]),float(response[str(i)]["pos"].split(",")[2]))
+			print(i," ",float(response[str(i)]["pos"].split(",")[0])," ",float(response[str(i)]["pos"].split(",")[1])," ",float(response[str(i)]["pos"].split(",")[2]))
+	else:
+		http.request("http://localhost:5000/get_anchor_pos")

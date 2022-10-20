@@ -17,6 +17,8 @@ onready var realPath = $Path
 onready var realPathFollow = $Path/PathFollow
 onready var item=$Path/PathFollow/Area
 onready var mesh=$Path/PathFollow/Mesh
+onready var fantasma=$Fantasma
+
 
 var extimated_pos_x=0
 var extimated_pos_y=0
@@ -44,6 +46,12 @@ var speed = 1
 var selected:bool = false
 
 func _process(delta):
+	
+	var pos=Vector3(pos_x,pos_y,pos_z)
+		
+	self.fantasma.global_transform= self.fantasma.global_transform.interpolate_with(Transform(Vector3(1,0,0),Vector3(0,1,0),Vector3(0,0,1),pos),delta)
+
+
 	
 	if udp.get_available_packet_count()>0:
 		var array_bytes = udp.get_packet()
@@ -101,11 +109,8 @@ func _process(delta):
 			self.iter=self.iter+1
 			self.dist=100
 		
-	else:
-		var pos=Vector3(pos_x,pos_y,pos_z)
-		
-		self.global_transform= self.global_transform.interpolate_with(Transform(Vector3(1,0,0),Vector3(0,1,0),Vector3(0,0,1),pos),delta)
-		
+	
+
 		"""
 		self.global_transform.origin.x=pos_x
 		self.global_transform.origin.y=pos_y
@@ -118,7 +123,7 @@ func _process(delta):
 		
 		
 func _ready():
-	
+	print("drone")
 	self.pathLine.addPoint(self.global_transform.origin)
 	self.label.text = objectName
 	udp.set_dest_address("127.0.0.1", 20003)
@@ -128,14 +133,15 @@ func _ready():
 	
 	var array_bytes = udp.get_packet()
 	dict=JSON.parse(array_bytes.get_string_from_ascii().replace("'",'"').replace("(","").replace(")","")).result
-	
+	print(dict)
 	pos_x=float(dict["drone_0"].split(",")[0])
 	pos_y=float(dict["drone_0"].split(",")[2])
 	pos_z=float(dict["drone_0"].split(",")[1])
-	
+
 	self.global_transform.origin.x=pos_x
 	self.global_transform.origin.y=pos_y
 	self.global_transform.origin.z=pos_z
+	
 
 
 

@@ -1,11 +1,11 @@
 [gd_scene load_steps=13 format=2]
 
-[ext_resource path="res://scripts/TouchObject.gd" type="Script" id=1]
-[ext_resource path="res://objects/PathLine.tscn" type="PackedScene" id=2]
+[ext_resource path="res://assets/models/lowpoly_drone/mat23.material" type="Material" id=1]
+[ext_resource path="res://scripts/TouchObject.gd" type="Script" id=2]
 [ext_resource path="res://addons/gizmo_plugin/scenes/3D Gizmo.tscn" type="PackedScene" id=3]
-[ext_resource path="res://assets/models/lowpoly_drone/mat23.material" type="Material" id=5]
-[ext_resource path="res://assets/models/lowpoly_drone/mat21.material" type="Material" id=6]
-[ext_resource path="res://assets/models/lowpoly_drone/mat5.material" type="Material" id=7]
+[ext_resource path="res://objects/PathLine.tscn" type="PackedScene" id=4]
+[ext_resource path="res://assets/models/lowpoly_drone/mat21.material" type="Material" id=5]
+[ext_resource path="res://assets/models/lowpoly_drone/mat5.material" type="Material" id=6]
 
 [sub_resource type="ViewportTexture" id=1]
 viewport_path = NodePath("Viewport")
@@ -18,7 +18,7 @@ surfaces/0 = {
 "blend_shape_data": [  ],
 "format": 97559,
 "index_count": 3828,
-"material": ExtResource( 6 ),
+"material": ExtResource( 5 ),
 "primitive": 4,
 "skeleton_aabb": [  ],
 "vertex_count": 2482
@@ -30,7 +30,7 @@ surfaces/1 = {
 "blend_shape_data": [  ],
 "format": 97559,
 "index_count": 3918,
-"material": ExtResource( 5 ),
+"material": ExtResource( 1 ),
 "primitive": 4,
 "skeleton_aabb": [  ],
 "vertex_count": 2570
@@ -42,7 +42,7 @@ surfaces/2 = {
 "blend_shape_data": [  ],
 "format": 97559,
 "index_count": 324,
-"material": ExtResource( 7 ),
+"material": ExtResource( 6 ),
 "primitive": 4,
 "skeleton_aabb": [  ],
 "vertex_count": 216
@@ -73,9 +73,9 @@ height = 0.0892745
 radius = 0.0864838
 
 [node name="TouchObject" type="Spatial" groups=["TouchObjects"]]
-script = ExtResource( 1 )
+script = ExtResource( 2 )
 
-[node name="PathLine" parent="." instance=ExtResource( 2 )]
+[node name="PathLine" parent="." instance=ExtResource( 4 )]
 
 [node name="Viewport" type="Viewport" parent="."]
 size = Vector2( 180, 50 )
@@ -165,6 +165,17 @@ collision_mask = 4
 
 [node name="FloorPoint" type="Position3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0458549, 0 )
+
+[node name="Fantasma" type="Spatial" parent="."]
+
+[node name="Mesh" type="MeshInstance" parent="Fantasma"]
+transform = Transform( -0.3, 0, -6.03983e-08, 0, 0.384, 0, 4.52987e-08, 0, -0.4, 0, 0, 0 )
+mesh = SubResource( 2 )
+
+[node name="Outline" type="MeshInstance" parent="Fantasma/Mesh"]
+transform = Transform( 1, 0, 1.42109e-14, 0, 1, 0, -1.42109e-14, 0, 1, 0, 0, 0 )
+mesh = SubResource( 3 )
+material/0 = SubResource( 4 )
 
 [connection signal="input_event" from="Path/PathFollow/Area" to="." method="_on_Area_input_event"]
 [connection signal="mouse_entered" from="Path/PathFollow/Area" to="." method="_on_Area_mouse_entered"]

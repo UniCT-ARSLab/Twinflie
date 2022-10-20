@@ -18,5 +18,6 @@ func addDrone(url):
 func _http_request_completed(result, response_code, headers, body):
 	
 	print(body)
+	print("cazzi")
 	var drone=droni.instance()
 	get_tree().get_root().get_node("World/Drones").add_child(drone)

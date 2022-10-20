@@ -49,7 +49,7 @@ func rotate(ev):
 		var t = cam_c.transform.orthonormalized()
 		t = t.rotated(-Vector3(0,1,0),ev.relative.x * .005)
 		cam_c.transform = t
-#
+#            
 
 func gui_input(ev):
 	if(ev is InputEventMouseButton && ev.button_index == BUTTON_WHEEL_UP):

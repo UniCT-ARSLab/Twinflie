@@ -9,6 +9,9 @@ from cflib.crazyflie.mem.memory_element import MemoryElement
 from flask import Flask
 import socket
 
+from gevent.pywsgi import WSGIServer
+
+
 global udp_listener
 udp_listener=[]
 lock_udp=threading.Lock()
@@ -42,7 +45,7 @@ def launchthread(uav: UAV):
 
 def connesso(uav:UAV):
     droni.append(uav)
-
+    lock_droni.release()
 app = Flask(__name__)
 
 @app.route('/connect_to/url/<url>')
@@ -57,6 +60,7 @@ def url_connect(url):
                       lambda uri:
                       print("Drone Connected!", uri)
                       )
+    lock_droni.acquire()
     uavTest.events.on(UAVEvents.CONNECTED, connesso)
     # uavTest.events.on(UAVEvents.CONTROLLER_READY,launchthread)
 
@@ -68,8 +72,6 @@ def UDP_listener():
     localIP     = "127.0.0.1"
     localPort   = 20003
     bufferSize  = 1024
-    msgFromServer       = "Hello UDP Client"
-    bytesToSend         = str.encode(msgFromServer)
     global udp_listener
     UDPServerSocket = socket.socket(family=socket.AF_INET, type=socket.SOCK_DGRAM)
     UDPServerSocket.bind((localIP, localPort))
@@ -107,6 +109,7 @@ def UDP_sender():
     
     while True:
         
+        time.sleep(0.2)
         global droni
         lock_droni.acquire()
         pos={}
@@ -124,7 +127,8 @@ def UDP_sender():
             UDPServerSocket.sendto(str.encode(msg_to_send), dest)
         lock_udp.release()
         lock_droni.release()
-        time.sleep(0.2)
+        print(msg_to_send)
+        
         
 @app.route("/get_anchor_pos")
 def anchor():
@@ -177,12 +181,18 @@ def movimento():
 
     return "guarda i droni"
 
-
-
+    
 if __name__ == '__main__':
     th = threading.Thread(target=UDP_listener, args=())
     th.start()
     
+    
     th2 = threading.Thread(target=UDP_sender, args=())
     th2.start()
-app.run()
+    
+    
+http=WSGIServer(("",5000),app)
+
+http.serve_forever()
+    
+    

@@ -57,9 +57,9 @@ class UAV :
         self.target_z = 0
         self.target_yaw = 0
 
-        self.x = None
-        self.y = None
-        self.z = None
+        self.x = 0
+        self.y = 0
+        self.z = 0
         self.starting_z=None
         
         self.battery = None
