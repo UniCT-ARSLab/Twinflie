@@ -1,0 +1,5 @@
+{
+    "python.analysis.extraPaths": [
+        "./Twinflie/python server/crazyflie-lib-python"
+    ]
+}
