@@ -20,12 +20,9 @@ margin_top = -0.984
 margin_right = 0.0499878
 margin_bottom = -1.016
 alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_right = 363.0
+margin_right = 559.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -49,11 +46,31 @@ margin_right = 200.0
 margin_bottom = 40.0
 rect_min_size = Vector2( 200, 40 )
 
-[node name="PlayButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/HBoxContainer"]
 margin_left = 204.0
-margin_right = 314.0
+margin_right = 262.0
+margin_bottom = 40.0
+text = "0"
+align = 1
+
+[node name="PlayButton" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 266.0
+margin_right = 376.0
 margin_bottom = 40.0
 text = "Test Navigation"
 
+[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 380.0
+margin_right = 490.0
+margin_bottom = 40.0
+text = "start navigation"
+
+[node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 494.0
+margin_right = 559.0
+margin_bottom = 40.0
+text = "set floor"
+
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/Slider" to="." method="_on_Slider_value_changed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/PlayButton" to="." method="_on_PlayButton_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="." method="_on_Button_start_real_pressed"]

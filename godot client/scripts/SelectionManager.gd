@@ -30,6 +30,8 @@ func on_point_selected(obj):
 	for object in get_tree().get_nodes_in_group("TouchPoints"):
 		if object != obj :
 			object.deselectObject();
+	
+	GuiManager.show_point_menu(pointSelected)
 	pointSelected.selectObject();
 
 

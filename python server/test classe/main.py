@@ -1,5 +1,6 @@
 from concurrent.futures import thread
 from multiprocessing.connection import Listener
+import re
 import time
 from classes.uav.UAV_ciccio import UAV
 from classes.uav.UAVEvents import UAVEvents
@@ -11,9 +12,14 @@ import socket
 
 from gevent.pywsgi import WSGIServer
 
+from flask import request
+
+from classes.point_list import Route as Route_class
+from pymitter import EventEmitter
 
 global udp_listener
 udp_listener=[]
+
 lock_udp=threading.Lock()
 
 lock_dati_1=threading.Lock()
@@ -25,35 +31,83 @@ dati=[[],[],[],[],[],[],[],[]]
 
 lock_droni=threading.Lock()
 global droni
-droni=[]
+droni={}
 
-def testTakeLand(uav: UAV):
-    print("partenza tra 2 sec")
-    time.sleep(2)
-    uav.take_off()
-    print("mi sto muovendo")
+global route_obj
+route_obj={}
+
+def movement(uav: UAV):
+    print("mi muovo")
     time.sleep(1)
-    uav.go_to(uav.x,uav.y+0.5 )
-    print("atterro")
-    time.sleep(1)
-    uav.land()
-    print(uav.x, uav.y, uav.z)
+    global route_obj
+    print(route_obj)
+    
+    percorso=route_obj[uav.uri]
+    
+    punto=percorso.pop()
+    percorso.passed(route_obj)
+    
+    punto=percorso.pop()
+    
+    
+    if punto[1]=="takeoff":
+        print("decollo")
+        uav.take_off(float(punto[0][1]))
+        percorso.passed(route_obj)
+    else:
+        print("errore posizione di decollo")
+        return 0
+    
+    while True:
+        punto=percorso.pop()
+        
+        if punto[1]=="landing":
+            uav.land()
+            print("atteraggio")
+            return
+        elif(punto[1]=="base"):
+            print("vado al punto:",punto[0][0],punto[0][2],punto[0][1])
+            uav.go_to(float(punto[0][0]),float(punto[0][2]),float(punto[0][1]))
+        elif(punto[1]=="meeting"):
+            print(punto[1])
+            print("vado al punto:",punto[0][0],punto[0][2],punto[0][1])
+            uav.go_to(float(punto[0][0]),float(punto[0][2]),float(punto[0][1]))
+        else:
+            print(punto[1])
+            print("vado al punto:",punto[0][0],punto[0][2],punto[0][1])
+            uav.go_to(float(punto[0][0]),float(punto[0][2]),float(punto[0][1]))
+            
+        
+        percorso.passed(route_obj)
+    
+    
 
 def launchthread(uav: UAV):
-    th = threading.Thread(target=testTakeLand, args=(uav,))
+    th = threading.Thread(target=movement, args=(uav,))
     th.start()
 
 def connesso(uav:UAV):
-    droni.append(uav)
+    droni[uav.uri]=uav
     lock_droni.release()
+
+def pronto_a_partire(uav:UAV):
+    pass
+
 app = Flask(__name__)
 
 @app.route('/connect_to/url/<url>')
 def url_connect(url):
     url=url.replace("_","/")
-    print(url)
+    #print(url)
     #uavTest = UAV('radio://0/102/2M/E7E7E7E705')
-
+    
+    global droni
+    lock_droni.acquire()
+    if url in droni:
+        lock_droni.release()
+        return "tutto fatto"      
+    lock_droni.release()
+    
     uavTest = UAV(url)
 
     uavTest.events.on(UAVEvents.CONNECTED,
@@ -62,6 +116,7 @@ def url_connect(url):
                       )
     lock_droni.acquire()
     uavTest.events.on(UAVEvents.CONNECTED, connesso)
+    uavTest.events.on(UAVEvents.CONTROLLER_READY, pronto_a_partire)
     # uavTest.events.on(UAVEvents.CONTROLLER_READY,launchthread)
 
     uavTest.connect()
@@ -117,17 +172,22 @@ def UDP_sender():
         if(len(droni)==0):
             msg_to_send="no drone connected"
         else:
-            for x in range(len(droni)):
-                pos_tupla=(droni[x].x,droni[x].y,droni[x].z)
-                pos["drone_"+str(x)]=str(pos_tupla)
+            #i=0
+            for key,uav in droni.items():
+                pos_tupla=(uav.x,uav.y,uav.z)
+                #pos["drone_"+str(i)]=str(pos_tupla)
+                pos[key]=str(pos_tupla)
+                #i=i+1
+                
             msg_to_send=str(pos)
         
         lock_udp.acquire()
         for dest in udp_listener:
             UDPServerSocket.sendto(str.encode(msg_to_send), dest)
+            
+        #print(msg_to_send)
         lock_udp.release()
         lock_droni.release()
-        print(msg_to_send)
         
         
 @app.route("/get_anchor_pos")
@@ -140,17 +200,21 @@ def anchor():
         json["status"]="no drone connected"
         return json
     
-    test_loco(droni[0])
+    test_loco(list(droni.values())[0])
+    #lock_droni.release()
     
+    #serve che qui il flusso si blocchi perche bisogno aspettare che i dati siano pronti nella "_anchor_position_signal" che sara un'evento asincrono,
+    #quindi il flusso si blocca sul lock "lock_dati_2" che verra liberato solo alla fine di "_anchor_position_signal"
     lock_dati_2.acquire()
+    
+    #ora i dati saranno sicuramente pronti
     global dati
     json["status"]="drone correctly connected"
     for x in range(len(dati)):
         json[str(x)]={"pos":str(dati[x])}
-
-    lock_droni.release()
-    
+        
     lock_dati_1.release()
+    
     return json
 
 def test_loco(uav: UAV):
@@ -158,7 +222,7 @@ def test_loco(uav: UAV):
     if len(mems_loco) > 0:
         mems_loco[0].update(_anchor_position_signal)
     
-    #lock_droni.release()
+    lock_droni.release()
 
 def _anchor_position_signal(mem):
     
@@ -175,11 +239,27 @@ def movimento():
     
     global droni
     
-    for drone in droni:
-        launchthread(drone)
-    
-
+    for url,drone in droni.items():
+        if drone.mc!=None:
+            launchthread(drone)
+        
+        else:
+            print("drone:",drone.uri,"not ready")
     return "guarda i droni"
+
+
+@app.route("/route",methods = ['POST'])
+def route():
+    data=request.get_json()
+    
+    #i=0
+    eventi=EventEmitter()
+    
+    for url,drone in droni.items():    
+        #route_obj[drone.uri]=Route_class(data["drone_"+str(i)],droni,url,eventi)
+        route_obj[drone.uri]=Route_class(data[url],droni,url,eventi)
+        #i=i+1
+    return "ok"
 
     
 if __name__ == '__main__':

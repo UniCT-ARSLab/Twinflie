@@ -32,3 +32,4 @@ func _http_request_completed(result, response_code, headers, body):
 			
 			print(i,float(response[str(i)]["pos"].split(",")[0]),float(response[str(i)]["pos"].split(",")[1]),float(response[str(i)]["pos"].split(",")[2]))
 
+

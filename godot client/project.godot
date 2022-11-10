@@ -33,7 +33,7 @@ _global_script_class_icons={
 [application]
 
 config/name="Decawave Drones"
-run/main_scene="res://scenes/network_scene.tscn"
+run/main_scene="res://scenes/test.tscn"
 config/icon="res://icon.png"
 
 [autoload]

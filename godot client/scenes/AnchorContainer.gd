@@ -6,16 +6,17 @@ var ancore=[]
 var http
 
 func _ready():
+	pass
+
+func make_req():
 	
 	http=HTTPRequest.new()
-	
 	add_child(http)
 	#http.set_use_threads(true)
 	#http.set_download_chunk_size(100000000)
 	http.connect("request_completed", self, "_http_request_completed")
 	var test=http.request("http://localhost:5000/get_anchor_pos")
 	#print(test)
-
 
 func _http_request_completed(result, response_code, headers, body):
 	print("ok")

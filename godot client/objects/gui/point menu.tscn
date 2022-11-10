@@ -1,0 +1,147 @@
+[gd_scene load_steps=2 format=2]
+
+[ext_resource path="res://objects/gui/point menu.gd" type="Script" id=1]
+
+[node name="point menu" type="Control"]
+anchor_bottom = 1.0
+grow_horizontal = 0
+script = ExtResource( 1 )
+
+[node name="VBoxContainer" type="VBoxContainer" parent="."]
+anchor_top = 0.5
+anchor_bottom = 0.5
+margin_top = -146.0
+margin_right = 183.0
+margin_bottom = 146.0
+
+[node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
+margin_right = 183.0
+margin_bottom = 292.0
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer"]
+margin_left = 7.0
+margin_top = 7.0
+margin_right = 176.0
+margin_bottom = 285.0
+
+[node name="Label" type="Label" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+margin_right = 169.0
+margin_bottom = 14.0
+text = "Point Settings"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+margin_top = 18.0
+margin_right = 169.0
+margin_bottom = 42.0
+
+[node name="Button" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+margin_right = 43.0
+margin_bottom = 24.0
+text = "set x"
+
+[node name="SpinBox" type="SpinBox" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
+margin_left = 47.0
+margin_right = 121.0
+margin_bottom = 24.0
+min_value = -100.0
+step = 0.001
+allow_greater = true
+allow_lesser = true
+
+[node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+margin_top = 46.0
+margin_right = 169.0
+margin_bottom = 70.0
+
+[node name="Button" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2"]
+margin_right = 43.0
+margin_bottom = 24.0
+text = "set y"
+
+[node name="SpinBox" type="SpinBox" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2"]
+margin_left = 47.0
+margin_right = 121.0
+margin_bottom = 24.0
+min_value = -100.0
+step = 0.001
+
+[node name="HBoxContainer3" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+margin_top = 74.0
+margin_right = 169.0
+margin_bottom = 98.0
+
+[node name="Button" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer3"]
+margin_right = 43.0
+margin_bottom = 24.0
+text = "set z"
+
+[node name="SpinBox" type="SpinBox" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer3"]
+margin_left = 47.0
+margin_right = 121.0
+margin_bottom = 24.0
+min_value = -100.0
+step = 0.001
+
+[node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+margin_top = 102.0
+margin_right = 169.0
+margin_bottom = 150.0
+
+[node name="Button" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer/VBoxContainer"]
+margin_right = 169.0
+margin_bottom = 20.0
+text = "set as meeting point"
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/PanelContainer/VBoxContainer/VBoxContainer"]
+margin_top = 24.0
+margin_right = 169.0
+margin_bottom = 48.0
+text = "meeting name"
+
+[node name="VBoxContainer2" type="VBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+margin_top = 154.0
+margin_right = 169.0
+margin_bottom = 202.0
+
+[node name="Button" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer/VBoxContainer2"]
+margin_right = 169.0
+margin_bottom = 20.0
+text = "change meeting name"
+
+[node name="LineEdit" type="LineEdit" parent="VBoxContainer/PanelContainer/VBoxContainer/VBoxContainer2"]
+margin_top = 24.0
+margin_right = 169.0
+margin_bottom = 48.0
+placeholder_text = "not a meeting point"
+
+[node name="HBoxContainer4" type="VBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+margin_top = 206.0
+margin_right = 169.0
+margin_bottom = 254.0
+
+[node name="Button" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer4"]
+margin_right = 169.0
+margin_bottom = 20.0
+text = "set waiting time"
+
+[node name="SpinBox" type="SpinBox" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer4"]
+margin_top = 24.0
+margin_right = 169.0
+margin_bottom = 48.0
+step = 0.5
+value = 1.0
+suffix = "s"
+
+[node name="Button" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+margin_top = 258.0
+margin_right = 169.0
+margin_bottom = 278.0
+text = "set as base"
+
+[connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2/Button" to="." method="_on_Button_y_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer3/Button" to="." method="_on_Button_z_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/VBoxContainer/Button" to="." method="_on_Button_add_meeting_point_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/VBoxContainer2/Button" to="." method="_on_Button_change_meeting_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer4/Button" to="." method="_on_Button_set_time_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/Button" to="." method="_on_Button_set_as_base_pressed"]

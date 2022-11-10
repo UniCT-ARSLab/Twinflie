@@ -2,16 +2,16 @@ extends Spatial
 
 class_name TouchObject
 
-signal object_collided
 
 #export var pathColor:Color = Color.red
 export var active:bool = true
 export var objectName = "No Name"
 
 onready var outline = $Path/PathFollow/Mesh/Outline
-onready var label = $Viewport/Panel/HBoxContainer/Label
-onready var sprite3d = $Sprite3D
-onready var gizmoTool = $GizmoTool
+onready var label = $Path/PathFollow/Viewport/Panel/HBoxContainer/Label
+
+onready var sprite3d = $Path/PathFollow/Sprite3D
+onready var gizmoTool = $Path/PathFollow/GizmoTool
 onready var pathLine = $PathLine
 onready var realPath = $Path
 onready var realPathFollow = $Path/PathFollow
@@ -39,33 +39,50 @@ var spinning=0
 var state_spinning=false
 var current_rotation=0
 
+var passed_point=[]
+
 var playing=false
 var waiting=0
 var speed = 1
-
+var wait_meeting=false
 var selected:bool = false
+var waiting_list=[]
+
+var sync_timer=10
+var sync_flag=false
 
 func _process(delta):
 	
+	if not sync_flag:
+		if sync_timer>0 :
+			sync_timer=sync_timer-delta
+			print(sync_timer)
+		elif sync_timer>-0.1:
+			self.sync_pos()
+			print("Syncc")
+			sync_flag=true
+			
 	var pos=Vector3(pos_x,pos_y,pos_z)
 		
 	self.fantasma.global_transform= self.fantasma.global_transform.interpolate_with(Transform(Vector3(1,0,0),Vector3(0,1,0),Vector3(0,0,1),pos),delta)
 
-
-	
 	if udp.get_available_packet_count()>0:
 		var array_bytes = udp.get_packet()
 		dict=JSON.parse(array_bytes.get_string_from_ascii().replace("'",'"').replace("(","").replace(")","")).result
 		
-		pos_x=float(dict["drone_0"].split(",")[0])
-		pos_y=float(dict["drone_0"].split(",")[2])
-		pos_z=float(dict["drone_0"].split(",")[1])
-		
-		
+		pos_x=float(dict[objectName].split(",")[0])
+		pos_y=float(dict[objectName].split(",")[2])
+		pos_z=float(dict[objectName].split(",")[1])
 		
 	if self.waiting>0:
 		waiting-=delta
 		return
+		
+	if self.wait_meeting:
+		for elem in self.waiting_list:
+				if not elem[0] in elem[1].passed_point:
+					return
+		
 	if state_spinning and current_rotation<360:
 		current_rotation+=1
 		self.realPathFollow.rotation_degrees.y+=1
@@ -75,36 +92,50 @@ func _process(delta):
 		current_rotation=0
 		self.state_spinning=false
 		return
+		
 	if self.playing:
 		if(self.iter==self.pathLine.getAllPoints().size()):
 			self.playing=false
 			return
 	
 		self.realPathFollow.offset += delta*self.speed
-		self.realPathFollow.look_at(self.pathLine.getAllPoints()[self.iter].global_transform.origin,self.pathLine.getAllPoints()[self.iter].global_transform.origin)
+		#self.realPathFollow.look_at(self.pathLine.getAllPoints()[self.iter].global_transform.origin,self.pathLine.getAllPoints()[self.iter].global_transform.origin)
 		self.realPathFollow.rotation_degrees.x=0
 		self.realPathFollow.rotation_degrees.z=0
 		
 		if(self.dist>=self.item.global_transform.origin.distance_to(self.pathLine.getAllPoints()[self.iter].global_transform.origin)):
 			self.dist=self.item.global_transform.origin.distance_to(self.pathLine.getAllPoints()[self.iter].global_transform.origin)
 		else:
-			if(self.pathLine.getAllPoints()[self.iter].type=="base"):
-				print("base")
+			self.passed_point.append(self.pathLine.getAllPoints()[self.iter])
+			#if(self.pathLine.getAllPoints()[self.iter].type=="base"):
+				#print("base")
 			
-			if(self.pathLine.getAllPoints()[self.iter].type=="takeoff"):
-				print("takeoff")
+			#if(self.pathLine.getAllPoints()[self.iter].type=="takeoff"):
+				#print("takeoff")
 			
-			if(self.pathLine.getAllPoints()[self.iter].type=="landing"):
-				print("landing")
+			#if(self.pathLine.getAllPoints()[self.iter].type=="landing"):
+				#print("landing")
 			
 			if(self.pathLine.getAllPoints()[self.iter].type=="waiting"):
 				self.waiting=self.pathLine.getAllPoints()[self.iter].time
-				print("waiting")
+				#print("waiting")
 			
 			if(self.pathLine.getAllPoints()[self.iter].type=="spinning"):
 				self.spinning=self.realPathFollow.rotation_degrees.y
 				self.state_spinning=true
-				print("spinning")
+				#print("spinning")
+			
+			if(self.pathLine.getAllPoints()[self.iter].type=="meeting"):
+				
+				for drone in get_tree().get_nodes_in_group("TouchObjects"):
+					if !drone.is_in_group("TouchPoints"):
+						if drone.playing and drone!=self:
+							for point in drone.pathLine.getAllPoints():
+								if point.type=="meeting" and point.name_meeting==self.pathLine.getAllPoints()[self.iter].name_meeting:
+									self.waiting_list.append([point,drone])
+									if !self.wait_meeting:
+										self.wait_meeting=true
+										
 			
 			self.iter=self.iter+1
 			self.dist=100
@@ -124,6 +155,7 @@ func _process(delta):
 		
 func _ready():
 	print("drone")
+	#objectName="drone_"+str(DroneManager.num)
 	self.pathLine.addPoint(self.global_transform.origin)
 	self.label.text = objectName
 	udp.set_dest_address("127.0.0.1", 20003)
@@ -134,16 +166,19 @@ func _ready():
 	var array_bytes = udp.get_packet()
 	dict=JSON.parse(array_bytes.get_string_from_ascii().replace("'",'"').replace("(","").replace(")","")).result
 	print(dict)
-	pos_x=float(dict["drone_0"].split(",")[0])
-	pos_y=float(dict["drone_0"].split(",")[2])
-	pos_z=float(dict["drone_0"].split(",")[1])
+	pos_x=float(dict[objectName].split(",")[0])
+	pos_y=float(dict[objectName].split(",")[2])
+	pos_z=float(dict[objectName].split(",")[1])
 
 	self.global_transform.origin.x=pos_x
 	self.global_transform.origin.y=pos_y
 	self.global_transform.origin.z=pos_z
 	
+	sync_timer=10
 
-
+func set_objectName(name):
+	
+	self.objectName=name
 
 func selectObject():
 	#self.pathLine.visible = true
@@ -160,6 +195,19 @@ func deselectObject():
 	self.selected = false
 	
 	
+func generate_route(route):
+	var punti=pathLine.getAllPoints()
+	
+	var json={}
+	json[objectName]=[]
+	var i=0
+	for punto in punti:
+		
+		json[objectName].append({"name":"punto_"+str(i),"coordinate":(punto.global_transform.origin),"type":punto.type,"meeting_name":punto.name_meeting,"pause_time":punto.time})
+		
+		i+=1
+	#print(json)
+	return json
 	
 func addPathPoint(point):
 	self.pathLine.addPoint(point)
@@ -181,8 +229,19 @@ func addwaitingpoint(time):
 	return self.pathLine.addwaitingpoint(time)
 
 
+func sync_pos():
 
-
+	self.realPathFollow.global_transform.origin=self.fantasma.global_transform.origin
+	
+	pathLine.getAllPoints()[0].global_transform.origin=self.realPathFollow.global_transform.origin
+	
+	"""
+	self.realPathFollow.global_transform.origin.x=pos_x
+	self.realPathFollow.global_transform.origin.y=pos_y
+	self.realPathFollow.global_transform.origin.z=pos_z"""
+	
+	
+	
 func disableObject():
 	self.active = false
 	self.gizmoTool.disableGizmo()
@@ -201,6 +260,8 @@ func generatePath():
 	self.iter=1
 	self.realPath.set_curve(_curve)
 	self.playing=true
+	self.passed_point=[]
+	self.waiting_list=[]
 	self.waiting=0
 	#self.realPathFollow.set_rotation_mode(PathFollow.ROTATION_XYZ)
 	
@@ -238,5 +299,10 @@ func set_vel(new_vel):
 	self.speed=new_vel
 
 func _on_CollisionArea_area_entered(area):
-	self.emit_signal("object_collided")
+	print("collisione")
+	if self.playing:
+		print("collisione2")
+		
+		DroneManager.emit_signal("drone_collided")
+	
 	pass # Replace with function body.

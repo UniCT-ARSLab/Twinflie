@@ -7,7 +7,7 @@
 [ext_resource path="res://scenes/GUIContainer.gd" type="Script" id=5]
 [ext_resource path="res://objects/gui/PlayerAnimation.tscn" type="PackedScene" id=6]
 [ext_resource path="res://objects/Floor.tscn" type="PackedScene" id=7]
-[ext_resource path="res://objects/PathPoint.tscn" type="PackedScene" id=8]
+[ext_resource path="res://objects/gui/point menu.tscn" type="PackedScene" id=8]
 [ext_resource path="res://scenes/AnchorContainer.gd" type="Script" id=9]
 
 [sub_resource type="ProceduralSky" id=1]
@@ -43,7 +43,7 @@ transform = Transform( 0.866025, 0.25, -0.433013, 0, 0.866025, 0.5, 0.5, -0.4330
 shadow_enabled = true
 
 [node name="Floor" parent="." instance=ExtResource( 7 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0.0031414, -7.23818, -0.0427713 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -2, 0 )
 
 [node name="MousePointer" parent="." instance=ExtResource( 2 )]
 visible = false
@@ -97,7 +97,13 @@ __meta__ = {
 "_edit_use_anchors_": false
 }
 
-[node name="Button" type="Button" parent="GUIContainer/MainMenu/PanelContainer/HBoxContainer"]
+[node name="reset estimation" type="Button" parent="GUIContainer/MainMenu/PanelContainer/HBoxContainer"]
+margin_left = 761.0
+margin_right = 881.0
+margin_bottom = 39.0
+text = "Reset Estimation"
+
+[node name="add new drone" type="Button" parent="GUIContainer/MainMenu/PanelContainer/HBoxContainer"]
 margin_left = 883.0
 margin_right = 995.0
 margin_bottom = 39.0
@@ -111,15 +117,10 @@ visible = false
 [node name="AddingPointMenu" parent="GUIContainer" instance=ExtResource( 1 )]
 visible = false
 
+[node name="point menu" parent="GUIContainer" instance=ExtResource( 8 )]
+visible = false
+
 [node name="AnchorContainer" type="Spatial" parent="."]
 script = ExtResource( 9 )
 
-[node name="Point" parent="." instance=ExtResource( 8 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -1.65, -2.6, 0 )
-
-[node name="Point2" parent="." instance=ExtResource( 8 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.85, -1.27589, 0.940235 )
-
-[node name="Point3" parent="." instance=ExtResource( 8 )]
-
-[connection signal="pressed" from="GUIContainer/MainMenu/PanelContainer/HBoxContainer/Button" to="GUIContainer" method="_on_Button_pressed"]
+[connection signal="pressed" from="GUIContainer/MainMenu/PanelContainer/HBoxContainer/add new drone" to="GUIContainer" method="_on_Button_pressed"]

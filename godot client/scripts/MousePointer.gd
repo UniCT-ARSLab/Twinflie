@@ -41,6 +41,7 @@ func _input(event):
 				if SceneManager.sceneState == SceneManager.STATES.adding:
 					#print("Metto un nuovo punto")
 					if self.hit != null:
+						GuiManager.hide_point_menu()
 						SelectionManager.objectSelected.get_node("PathLine").addPoint(point)
 			
 			

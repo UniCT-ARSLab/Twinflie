@@ -47,7 +47,6 @@ margin_top = 3.0
 margin_right = 256.0
 margin_bottom = 17.0
 text = "Type the URI of the drone"
-percent_visible = 5.0
 
 [node name="Button" type="Button" parent="container/Panel/VBoxContainer/HBoxContainer2"]
 margin_left = 268.0

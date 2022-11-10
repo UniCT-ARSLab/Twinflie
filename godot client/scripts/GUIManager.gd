@@ -22,6 +22,13 @@ func showAddingPointsMenu(drone):
 func hideAddingPointsMenu():
 	GUI_CONTAINER.get_node("AddingPointMenu").closeObject()
 
+func show_point_menu(point):
+	GUI_CONTAINER.get_node("point menu").closeObject()
+	self.GUI_CONTAINER.get_node("point menu").openObject(point)
+	
+func hide_point_menu():
+	GUI_CONTAINER.get_node("point menu").closeObject()
+
 
 
 func hideBottomMenu():

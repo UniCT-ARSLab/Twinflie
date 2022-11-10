@@ -6,8 +6,11 @@ onready var lineDrawer = $LineRenderer
 onready var raycast = $RayCast
 var selected:bool = false
 
+
 var type
 var time=null
+var name_meeting=""
+
 # Called when the node enters the scene tree for the first time.
 func _ready():
 

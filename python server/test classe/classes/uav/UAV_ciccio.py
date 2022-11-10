@@ -1,4 +1,6 @@
+from operator import truediv
 from turtle import distance
+from typing import Counter
 from pymitter import EventEmitter
 import time
 import sys
@@ -14,9 +16,9 @@ from cflib.crazyflie.syncLogger import SyncLogger
 
 from classes.uav.UAVEvents import UAVEvents
 
-X_THRESHOLD = 0.1 # 10cm
-Y_THRESHOLD = 0.1 # 10cm
-Z_THRESHOLD = 0.2 # 20cm
+X_THRESHOLD = 0.07 # 10cm
+Y_THRESHOLD = 0.07 # 10cm
+Z_THRESHOLD = 0.14 # 20cm
 
 class UAV :
 
@@ -35,13 +37,17 @@ class UAV :
 
         self.positionEstimated = False
 
-        self.logConf = LogConfig(name='Position', period_in_ms=250)
+        self.logConf = LogConfig(name='Position', period_in_ms=100)
         self.logConf.add_variable('kalman.stateX', 'float')
         self.logConf.add_variable('kalman.stateY', 'float')
         self.logConf.add_variable('kalman.stateZ', 'float')
-        self.logConf.add_variable('pm.vbat', 'float')
+        
         self.logConf.add_variable('stabilizer.yaw', 'float')
-
+        self.logConf.add_variable('stabilizer.pitch', 'float')
+        self.logConf.add_variable('stabilizer.roll', 'float')
+        
+        #test gyro.zRaw gyro.yRaw gyro.xRaw
+        
         self.logConfEstimation = LogConfig(name='Kalman Variance', period_in_ms=500)
         self.logConfEstimation.add_variable('kalman.varPX', 'float')
         self.logConfEstimation.add_variable('kalman.varPY', 'float')
@@ -65,9 +71,10 @@ class UAV :
         self.battery = None
         self.roll = None
         self.pitch = None 
-        self.yaw = None
+        self.yaw = 0
+        self.past_yaw=None
         self.origin = None
-
+        self.flag=True
         self.controller_inizialized=False
         
         self.events.on(UAVEvents.POSITION_READY,self.initialize_controller)
@@ -77,7 +84,6 @@ class UAV :
     
 
     def connect(self):
-        
         self.crazyflie.open_link(self.uri)
         
     def disconnect(self):
@@ -89,10 +95,11 @@ class UAV :
         time.sleep(0.5)
         self.crazyflie.param.set_value('kalman.resetEstimation', '0')
 
-    def take_off(self):
+    def take_off(self, my_height):
+        
         self.origin = [ self.x, self.y , self.z]
         
-        self.mc.take_off()
+        self.mc.take_off(height=my_height)
         
         
         
@@ -100,15 +107,15 @@ class UAV :
     def land(self):
         distance=self.z-self.starting_z
         
-        self.mc.down(distance,velocity=0.1)
+        self.mc.down(distance+0.5,velocity=0.1)
         
         #this code si copied from the motion controll class 
-        self.mc._thread.stop()
-        self.mc._thread = None
-        self.mc._cf.commander.send_stop_setpoint()
-        self.mc._is_flying = False
+        # self.mc._thread.stop()
+        # self.mc._thread = None
+        # self.mc._cf.commander.send_stop_setpoint()
+        # self.mc._is_flying = False
         
-        #self.mc.land()
+        self.mc.land()
 
 
     def go_to(self, x, y, z=0):
@@ -117,7 +124,26 @@ class UAV :
         distance_y=y - self.y    
         distance_z=z - self.z
         
-        self.mc.move_distance(distance_x,distance_y,distance_z)
+        counter=0
+        # print("devo andare:",x," , ",y," , ",z)
+        # print("mi devo muovere di",distance_x," , ",distance_y," , ",distance_z," , ",counter)
+        
+        # print("x,y distance",((abs(distance_x)>=X_THRESHOLD)or(abs(distance_y)>=Y_THRESHOLD)))
+        # print(abs((abs(distance_z)>=Z_THRESHOLD)))
+        
+        while((counter<=7) and (abs(distance_x)>=X_THRESHOLD) or (abs(distance_y)>=Y_THRESHOLD) or (abs(distance_z)>=Z_THRESHOLD)):
+            # print("mi muovo")
+            self.mc.move_distance(distance_x,distance_y,distance_z)
+            
+            distance_x=x - self.x
+            distance_y=y - self.y    
+            distance_z=z - self.z
+            
+            #print("mi devo muovere di", distance_x," , ",distance_y," , ",distance_z," , ",counter)
+            
+            counter=counter+1
+        
+        
         
         
 
@@ -126,7 +152,7 @@ class UAV :
     # have been downloaded
     
     def _on_connected(self, uri):
-        print("UAV Connected,classe", uri)
+        print("UAV Connected,", uri)
         #self.crazyflie.log.add_config(self.logConf)
         self.scf = SyncCrazyflie(self.uri, self.crazyflie)
         self.crazyflie.log.add_config(self.logConfEstimation)
@@ -176,17 +202,23 @@ class UAV :
         self.x = data['kalman.stateX']
         self.y = data['kalman.stateY']
         self.z = data['kalman.stateZ']
-        self.battery = data['pm.vbat']
-        self.roll = 0#data['stabilizer.roll']
-        self.pitch = 0# data['stabilizer.pitch']
         
-        self.yaw = data['stabilizer.yaw']
+        #self.battery = data['pm.vbat']yaw']
         
+        # self.roll = data['stabilizer.roll']
+        # self.pitch = data['stabilizer.pitch']
+        # self.yaw = data['stabilizer.yaw']
+        
+        #print("x:",self.x,"y:",self.y,"z:",self.z)
+        
+        #print("yaw:",self.yaw)
+        
+        #print("roll:",self.roll,"pitch:",self.pitch,"yaw:",data['stabilizer.yaw'])
             
-        if self.positionEstimatedEmitted is not True:
-            self.positionEstimatedEmitted = True
-            self.events.emit(UAVEvents.POSITION_READY)
-        #print ("[%d][%s]: %s" % (timestamp, logconf.name, data))
+        # if self.positionEstimatedEmitted is not True:
+        #     self.positionEstimatedEmitted = True
+        #     self.events.emit(UAVEvents.POSITION_READY)
+        # print ("[%d][%s]: %s" % (timestamp, logconf.name, data))
         pass
 
     def _on_data_estimation_received(self, timestamp, data, logconf):
@@ -223,7 +255,8 @@ class UAV :
         
         self.crazyflie.log.add_config(self.logConf)
         self.logConf.start()
-        #self.events.emit(UAVEvents.POSITION_READY, self)
+        
+        self.events.emit(UAVEvents.POSITION_READY)
  
 
     def initialize_controller(self):

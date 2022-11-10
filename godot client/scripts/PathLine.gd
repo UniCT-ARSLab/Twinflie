@@ -44,7 +44,9 @@ func clearPoints():
 	self.lineDrawer.clearLine()
 	self.addPoint(first)
 	
+	self.getAllPoints()[0].global_transform.origin=get_parent().realPathFollow.global_transform.origin
 	
+
 func makeTransparent():
 	var material = SpatialMaterial.new()
 	material.albedo_color = Color8(117, 117, 117, 120)

@@ -50,6 +50,7 @@ func addingState():
 			object.disableObject()
 	SelectionManager.objectSelected.disableObject()
 	GuiManager.hideBottomMenu()
+	GuiManager.hide_point_menu()
 	GuiManager.hideDroneSelected()
 	GuiManager.showAddingPointsMenu(SelectionManager.objectSelected)
 	pass

@@ -1,0 +1,11 @@
+Model Information:
+* title:	Crazyflie 2.X
+* source:	https://sketchfab.com/3d-models/crazyflie-2x-7b3ef11ebced4bfdb91bd756bfae46a5
+* author:	bitcraze_se (https://sketchfab.com/bitcraze_se)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Crazyflie 2.X" (https://sketchfab.com/3d-models/crazyflie-2x-7b3ef11ebced4bfdb91bd756bfae46a5) by bitcraze_se (https://sketchfab.com/bitcraze_se) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)

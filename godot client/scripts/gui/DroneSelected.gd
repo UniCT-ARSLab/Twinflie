@@ -43,3 +43,8 @@ func _on_Button_pressed():
 	
 	self.objectSelected.set_vel($VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/SpinBox.value)
 	pass # Replace with function body.
+
+
+func _on_syncronyze_position_pressed():
+	self.objectSelected.sync_pos()
+	pass # Replace with function body.

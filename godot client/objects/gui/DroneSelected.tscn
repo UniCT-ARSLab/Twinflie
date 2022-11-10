@@ -33,7 +33,7 @@ __meta__ = {
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
 margin_right = 154.0
-margin_bottom = 204.0
+margin_bottom = 252.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -42,7 +42,7 @@ __meta__ = {
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 147.0
-margin_bottom = 197.0
+margin_bottom = 245.0
 custom_constants/separation = 8
 alignment = 1
 
@@ -84,10 +84,17 @@ margin_bottom = 158.0
 rect_min_size = Vector2( 0, 40 )
 text = "Deselect Drone"
 
-[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+[node name="syncronyze position" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer"]
 margin_top = 166.0
 margin_right = 140.0
-margin_bottom = 190.0
+margin_bottom = 206.0
+rect_min_size = Vector2( 0, 40 )
+text = "syncronyze position"
+
+[node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+margin_top = 214.0
+margin_right = 140.0
+margin_bottom = 238.0
 
 [node name="Button" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
 margin_right = 62.0
@@ -107,4 +114,5 @@ value = 1.0
 [connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/Add Points" to="." method="_on_Add_Points_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/Delete" to="." method="_on_Delete_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/Deselect" to="." method="_on_Deselect_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/syncronyze position" to="." method="_on_syncronyze_position_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_Button_pressed"]
