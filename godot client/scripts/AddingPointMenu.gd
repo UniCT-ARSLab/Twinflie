@@ -45,7 +45,7 @@ func _on_ClearPoints_pressed():
 func _on_SavePoints_pressed():
 	SelectionManager.objectSelected.get_node("PathLine").clearGhost()
 	SceneManager.changeState(SceneManager.STATES.selection)
-
+	GuiManager.showDroneSelected(self.objectSelected)
 func _on_TakeoffPoint_pressed():
 	self.objectSelected.addTakeoffPoint($VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/SpinBox.value)
 

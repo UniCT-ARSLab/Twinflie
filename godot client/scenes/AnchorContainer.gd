@@ -34,5 +34,7 @@ func _http_request_completed(result, response_code, headers, body):
 			objAnchor.global_transform.origin.z=float(response[str(i)]["pos"].split(",")[1])
 			
 			print(i," ",float(response[str(i)]["pos"].split(",")[0])," ",float(response[str(i)]["pos"].split(",")[1])," ",float(response[str(i)]["pos"].split(",")[2]))
+		
+		get_tree().get_root().remove_child(get_tree().get_root().get_node("Loading_screen"))
 	else:
 		http.request("http://localhost:5000/get_anchor_pos")

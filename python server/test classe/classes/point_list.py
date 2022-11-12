@@ -86,6 +86,12 @@ class Route():
                                 self.iter=self.iter+1
                                 return
             
+            if self.lista[self.iter]["type"]=="waiting":
+                time.sleep(float(self.lista[self.iter]["pause_time"]))
+            
+            if self.lista[self.iter]["type"]=="spinning":
+                self.drones[self.uri].spinning()
+                pass
             if(flag):
                 self.event.emit("unlock_all")
                     

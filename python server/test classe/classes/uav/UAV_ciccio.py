@@ -41,10 +41,12 @@ class UAV :
         self.logConf.add_variable('kalman.stateX', 'float')
         self.logConf.add_variable('kalman.stateY', 'float')
         self.logConf.add_variable('kalman.stateZ', 'float')
+        self.logConf.add_variable('pm.vbat', 'float')
         
-        self.logConf.add_variable('stabilizer.yaw', 'float')
-        self.logConf.add_variable('stabilizer.pitch', 'float')
-        self.logConf.add_variable('stabilizer.roll', 'float')
+        # self.logConf.add_variable('stabilizer.yaw', 'float')
+        
+        # self.logConf.add_variable('stabilizer.pitch', 'float')
+        # self.logConf.add_variable('stabilizer.roll', 'float')
         
         #test gyro.zRaw gyro.yRaw gyro.xRaw
         
@@ -107,7 +109,7 @@ class UAV :
     def land(self):
         distance=self.z-self.starting_z
         
-        self.mc.down(distance+0.5,velocity=0.1)
+        #self.mc.down(distance+0.5,velocity=0.1)
         
         #this code si copied from the motion controll class 
         # self.mc._thread.stop()
@@ -143,6 +145,12 @@ class UAV :
             
             counter=counter+1
         
+    def spinning (self):
+        self.mc.turn_left(360)
+        
+    def reset_estimator(self):
+         
+        self.mc._reset_position_estimator()
         
         
         
@@ -157,12 +165,14 @@ class UAV :
         self.scf = SyncCrazyflie(self.uri, self.crazyflie)
         self.crazyflie.log.add_config(self.logConfEstimation)
         if self.logConfEstimation.valid:
+
             self.events.emit(UAVEvents.CONNECTED, self)
             self.logConfEstimation.start()
         else:
             exit(1)
         pass
     # Called on disconnect, no matter the reason
+    
     def _on_disconnected(self, uri):
         self.events.emit(UAVEvents.DISCONNECTED, self)
         print("Drone Disconnected", uri)
@@ -202,8 +212,7 @@ class UAV :
         self.x = data['kalman.stateX']
         self.y = data['kalman.stateY']
         self.z = data['kalman.stateZ']
-        
-        #self.battery = data['pm.vbat']yaw']
+        self.battery = data['pm.vbat']
         
         # self.roll = data['stabilizer.roll']
         # self.pitch = data['stabilizer.pitch']

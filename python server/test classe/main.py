@@ -62,8 +62,9 @@ def movement(uav: UAV):
         punto=percorso.pop()
         
         if punto[1]=="landing":
-            uav.land()
+            
             print("atteraggio")
+            uav.land()
             return
         elif(punto[1]=="base"):
             print("vado al punto:",punto[0][0],punto[0][2],punto[0][1])
@@ -261,6 +262,13 @@ def route():
         #i=i+1
     return "ok"
 
+
+
+@app.route("/reset_estimation",methods = ['POST'])
+def reset_estimation():
+    for url,drone in droni.items():
+        drone.reset_estimator()     
+    return "ok"
     
 if __name__ == '__main__':
     th = threading.Thread(target=UDP_listener, args=())

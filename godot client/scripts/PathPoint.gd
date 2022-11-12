@@ -1,7 +1,7 @@
 extends Spatial
 
 onready var outline = $Mesh/Outline
-onready var gizmoTool = $GizmoTool
+#onready var gizmoTool = $GizmoTool
 onready var lineDrawer = $LineRenderer
 onready var raycast = $RayCast
 var selected:bool = false
@@ -18,8 +18,9 @@ func _ready():
 
 func selectObject():
 	self.outline.visible = true
-	self.gizmoTool.active = true
-	self.gizmoTool.visible = true
+	#self.gizmoTool.active = true
+	#self.gizmoTool.visible = true
+	$Mesh/Outline.visible=true
 	print(self.type)
 	if(self.time!=null):
 		print(self.time)
@@ -27,8 +28,9 @@ func selectObject():
 	
 func deselectObject():
 	self.outline.visible = false
-	self.gizmoTool.active = false
-	self.gizmoTool.visible = false
+	#self.gizmoTool.active = false
+	#self.gizmoTool.visible = false
+	$Mesh/Outline.visible=false
 	self.selected = false
 	
 func _on_Area_input_event(camera, event, click_position, click_normal, shape_idx):

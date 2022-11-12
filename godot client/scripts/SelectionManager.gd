@@ -22,6 +22,8 @@ func on_object_selected(obj):
 	for object in get_tree().get_nodes_in_group("TouchObjects"):
 		if object != obj :
 			object.deselectObject();
+			
+	GuiManager.hide_point_menu()
 	GuiManager.showDroneSelected(objectSelected)
 	objectSelected.selectObject();
 	
@@ -30,7 +32,8 @@ func on_point_selected(obj):
 	for object in get_tree().get_nodes_in_group("TouchPoints"):
 		if object != obj :
 			object.deselectObject();
-	
+			
+	GuiManager.hide_point_menu()
 	GuiManager.show_point_menu(pointSelected)
 	pointSelected.selectObject();
 

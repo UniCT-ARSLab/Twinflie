@@ -59,6 +59,8 @@ func end_simulation(flag):
 	
 	
 func _on_PlayButton_pressed():
+	GuiManager.hide_point_menu()
+	GuiManager.hideDroneSelected()
 	var counter=0
 	for object in get_tree().get_nodes_in_group("TouchObjects"):
 		if !object.is_in_group("TouchPoints"):
@@ -128,3 +130,18 @@ func _on_Button_start_real_pressed():
 	http.connect("request_completed", self, "_http_request_completed")
 	var test=http.request("http://localhost:5000/falli_partire")
 
+
+
+func _on_set_floor_pressed():
+	var my_y=1000
+	
+	for object in get_tree().get_nodes_in_group("TouchObjects"):
+		if !object.is_in_group("TouchPoints"):
+			object.sync_pos()
+			if my_y>object.fantasma.global_transform.origin.y:
+				my_y=object.fantasma.global_transform.origin.y
+				
+	get_tree().get_root().get_node("World/Floor").global_transform.origin.y=my_y-0.1
+	
+	
+	pass # Replace with function body.

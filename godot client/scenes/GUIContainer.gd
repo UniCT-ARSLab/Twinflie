@@ -10,7 +10,9 @@ func _ready():
 
 
 func _on_Button_pressed():
-
+	GuiManager.hide_point_menu()
+	GuiManager.hideDroneSelected()
+	
 	add_child(input_drone.instance())
 	
 	pass # Replace with function body.

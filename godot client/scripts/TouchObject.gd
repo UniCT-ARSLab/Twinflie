@@ -56,10 +56,8 @@ func _process(delta):
 	if not sync_flag:
 		if sync_timer>0 :
 			sync_timer=sync_timer-delta
-			print(sync_timer)
 		elif sync_timer>-0.1:
 			self.sync_pos()
-			print("Syncc")
 			sync_flag=true
 			
 	var pos=Vector3(pos_x,pos_y,pos_z)

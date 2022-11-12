@@ -9,6 +9,8 @@ onready var camera = get_node(cameraPath)
 
 #questo oggeto gestisce l'interazione tra il puntatore del mouse e la scena corrente valutando lo stato della scena
 
+var http
+
 var touchObjects
 var point:Vector3
 var oldPoint:Vector3
@@ -76,3 +78,17 @@ func _updateMousePosition():
 
 func setCamera(camera):
 	self.camera = camera
+
+
+func _on_reset_estimation_pressed():
+	
+	http=HTTPRequest.new()
+	add_child(http)
+	#http.set_use_threads(true)
+	#http.set_download_chunk_size(100000000)
+	http.connect("request_completed", self, "_http_request_completed")
+	var test=http.request("http://localhost:5000/reset_estimation")
+	#print(test)
+
+func _http_request_completed(result, response_code, headers, body):
+	print("ok")

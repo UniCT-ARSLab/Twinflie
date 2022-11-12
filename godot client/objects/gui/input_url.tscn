@@ -27,37 +27,37 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Panel" type="PanelContainer" parent="container"]
-margin_right = 327.0
+margin_right = 319.0
 margin_bottom = 62.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="container/Panel"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 320.0
+margin_right = 312.0
 margin_bottom = 55.0
 
 [node name="HBoxContainer2" type="HSplitContainer" parent="container/Panel/VBoxContainer"]
-margin_right = 313.0
+margin_right = 305.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 split_offset = 100
 
 [node name="Label" type="Label" parent="container/Panel/VBoxContainer/HBoxContainer2"]
 margin_top = 3.0
-margin_right = 256.0
+margin_right = 248.0
 margin_bottom = 17.0
 text = "Type the URI of the drone"
 
 [node name="Button" type="Button" parent="container/Panel/VBoxContainer/HBoxContainer2"]
-margin_left = 268.0
-margin_right = 313.0
+margin_left = 260.0
+margin_right = 305.0
 margin_bottom = 20.0
 grow_horizontal = 0
 text = "abort"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="container/Panel/VBoxContainer"]
 margin_top = 24.0
-margin_right = 313.0
+margin_right = 305.0
 margin_bottom = 48.0
 alignment = 1
 
@@ -68,9 +68,9 @@ text = "connect to url"
 
 [node name="LineEdit" type="LineEdit" parent="container/Panel/VBoxContainer/HBoxContainer"]
 margin_left = 105.0
-margin_right = 313.0
+margin_right = 305.0
 margin_bottom = 24.0
-text = "radio:__0_102_2M_E7E7E7E705"
+text = "radio:__0_90_2M_E7E7E7E702"
 expand_to_text_length = true
 
 [connection signal="pressed" from="container/Panel/VBoxContainer/HBoxContainer2/Button" to="." method="_on_abort"]

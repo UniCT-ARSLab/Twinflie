@@ -59,13 +59,13 @@ margin_right = 376.0
 margin_bottom = 40.0
 text = "Test Navigation"
 
-[node name="Button" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="start navigation" type="Button" parent="VBoxContainer/HBoxContainer"]
 margin_left = 380.0
 margin_right = 490.0
 margin_bottom = 40.0
 text = "start navigation"
 
-[node name="Button2" type="Button" parent="VBoxContainer/HBoxContainer"]
+[node name="set floor" type="Button" parent="VBoxContainer/HBoxContainer"]
 margin_left = 494.0
 margin_right = 559.0
 margin_bottom = 40.0
@@ -73,4 +73,5 @@ text = "set floor"
 
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/Slider" to="." method="_on_Slider_value_changed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/PlayButton" to="." method="_on_PlayButton_pressed"]
-[connection signal="pressed" from="VBoxContainer/HBoxContainer/Button" to="." method="_on_Button_start_real_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/start navigation" to="." method="_on_Button_start_real_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/set floor" to="." method="_on_set_floor_pressed"]
