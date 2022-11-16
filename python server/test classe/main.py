@@ -264,7 +264,7 @@ def route():
 
 
 
-@app.route("/reset_estimation",methods = ['POST'])
+@app.route("/reset_estimation")
 def reset_estimation():
     for url,drone in droni.items():
         drone.reset_estimator()     

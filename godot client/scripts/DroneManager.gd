@@ -28,8 +28,10 @@ func _http_request_completed(result, response_code, headers, body):
 	var drone=droni.instance()
 	drone.set_objectName(current_url)
 	get_tree().get_root().get_node("World/Drones").add_child(drone)
-	
+	get_tree().get_root().remove_child(get_tree().get_root().get_node("Loading_screen"))
 	if num==0:
+		var caricamento=loading.instance()
+		get_tree().get_root().add_child(caricamento)
 		get_tree().get_root().get_node("World/AnchorContainer").make_req()
 	
 	num=num+1

@@ -67,7 +67,7 @@ func _process(delta):
 	if udp.get_available_packet_count()>0:
 		var array_bytes = udp.get_packet()
 		dict=JSON.parse(array_bytes.get_string_from_ascii().replace("'",'"').replace("(","").replace(")","")).result
-		
+		print(dict)
 		pos_x=float(dict[objectName].split(",")[0])
 		pos_y=float(dict[objectName].split(",")[2])
 		pos_z=float(dict[objectName].split(",")[1])

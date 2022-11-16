@@ -1,6 +1,8 @@
 import threading
 from pymitter import EventEmitter
 
+import time
+
 class Route():
 
     def sblocca(self):
@@ -40,7 +42,7 @@ class Route():
         cord=dizio["coordinate"]
         cord=cord.replace("(","").replace(")","").replace(" ","")
         cord=cord.split(",")
-        dizio["coordinate"]=cord
+        #dizio["coordinate"]=cord
         
         tipo=dizio["type"]
         
@@ -86,14 +88,21 @@ class Route():
                                 self.iter=self.iter+1
                                 return
             
-            if self.lista[self.iter]["type"]=="waiting":
-                time.sleep(float(self.lista[self.iter]["pause_time"]))
+        #se il punto è di tipo waiting
+        if self.lista[self.iter]["type"]=="waiting":
+            print("aspetto",float(self.lista[self.iter]["pause_time"]))
+            time.sleep(float(self.lista[self.iter]["pause_time"]))
+        
+        #se il punto è di tipo spinning
+        if self.lista[self.iter]["type"]=="spinning":
+            self.drones[self.uri].spinning()
             
-            if self.lista[self.iter]["type"]=="spinning":
-                self.drones[self.uri].spinning()
-                pass
-            if(flag):
-                self.event.emit("unlock_all")
+            time.sleep(0.1)
+            punto=self.pop()
+            self.drones[self.uri].go_to(float(punto[0][0]),float(punto[0][2]),float(punto[0][1]))
+        
+        if(flag):
+            self.event.emit("unlock_all")
                     
         self.iter=self.iter+1
         

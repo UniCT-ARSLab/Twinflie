@@ -109,15 +109,16 @@ class UAV :
     def land(self):
         distance=self.z-self.starting_z
         
-        #self.mc.down(distance+0.5,velocity=0.1)
+        self.mc.down(abs(distance),velocity=0.1)
         
         #this code si copied from the motion controll class 
-        # self.mc._thread.stop()
-        # self.mc._thread = None
-        # self.mc._cf.commander.send_stop_setpoint()
-        # self.mc._is_flying = False
         
-        self.mc.land()
+        self.mc._thread.stop()
+        self.mc._thread = None
+        self.mc._cf.commander.send_stop_setpoint()
+        self.mc._is_flying = False
+        
+        #self.mc.land()
 
 
     def go_to(self, x, y, z=0):
@@ -151,6 +152,7 @@ class UAV :
     def reset_estimator(self):
          
         self.mc._reset_position_estimator()
+        print(self.uri,"estimator resetted")
         
         
         
@@ -165,7 +167,7 @@ class UAV :
         self.scf = SyncCrazyflie(self.uri, self.crazyflie)
         self.crazyflie.log.add_config(self.logConfEstimation)
         if self.logConfEstimation.valid:
-
+            print("qui")
             self.events.emit(UAVEvents.CONNECTED, self)
             self.logConfEstimation.start()
         else:
@@ -191,6 +193,7 @@ class UAV :
 
     # Called if establishing of the link fails (i.e times out)
     def _on_connection_failed(self, uri ,error):
+        print("errore connessione")
         self.events.emit(UAVEvents.CONNECTION_FAILED, self, error)
         print(error)
         pass
@@ -214,6 +217,7 @@ class UAV :
         self.z = data['kalman.stateZ']
         self.battery = data['pm.vbat']
         
+        #print(self.uri,self.battery)
         # self.roll = data['stabilizer.roll']
         # self.pitch = data['stabilizer.pitch']
         # self.yaw = data['stabilizer.yaw']
@@ -246,7 +250,7 @@ class UAV :
         min_z = min(self.var_z_history)
         max_z = max(self.var_z_history)
 
-        #print("ricevuta varianza controllo soglia")
+        print("ricevuta varianza controllo soglia")
 
         if (max_x - min_x) < threshold and (max_y - min_y) < threshold and (max_z - min_z) < threshold:
             
@@ -254,11 +258,12 @@ class UAV :
             self.var_y_history = []
             self.var_x_history = []
             self.var_z_history = []
+            
             self._on_position_estimation_finished()
             
 
     def _on_position_estimation_finished(self):
-        print("Estimation Completed test")
+        print("Estimation Completed")
         self.positionEstimated = True
         self.positionEstimatedEmitted = False
         
