@@ -9,7 +9,7 @@ import threading
 from cflib.crazyflie.mem.memory_element import MemoryElement
 from flask import Flask
 import socket
-
+from lpslib.lopoanchor import LoPoAnchor
 from gevent.pywsgi import WSGIServer
 
 from flask import request
@@ -66,6 +66,7 @@ def movement(uav: UAV):
             print("atteraggio")
             uav.land()
             return
+        
         elif(punto[1]=="base"):
             print("vado al punto:",punto[0][0],punto[0][2],punto[0][1])
             uav.go_to(float(punto[0][0]),float(punto[0][2]),float(punto[0][1]))
@@ -262,7 +263,32 @@ def route():
         #i=i+1
     return "ok"
 
+@app.route("/set_anchor_pos",methods = ['POST'])
+def set_anchor_pos():
+    print("set ancore")
+    data=request.get_json()
+    
+    lock_droni.acquire()
+    
+    print("set ancore2")
+    json={}
+    if len(droni)==0:
+        lock_droni.release()
+        json["status"]="no drone connected"
+        return json
 
+    #list(droni.values())[0] #primo drone connesso
+    
+    ancore = LoPoAnchor(list(droni.values())[0].scf.cf)
+    for id, pos in data.items():
+        print(int(id))
+        print(float(pos["x"]), float(pos["z"]), float(pos["y"]))
+        ancore.set_position(int(id), (float(pos["x"]), float(pos["z"]), float(pos["y"])))
+
+    
+    lock_droni.release()
+    print("ci arriviamo qui")
+    return "ok"
 
 @app.route("/reset_estimation")
 def reset_estimation():

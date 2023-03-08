@@ -139,8 +139,8 @@ step = 0.5
 value = 1.0
 suffix = "s"
 
-[connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_Button_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_Button_x_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_Button_pressed"]
 [connection signal="value_changed" from="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/SpinBox" to="." method="_on_SpinBox_x_value_changed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2/Button" to="." method="_on_Button_y_pressed"]
 [connection signal="value_changed" from="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer2/SpinBox" to="." method="_on_SpinBox_y_value_changed"]

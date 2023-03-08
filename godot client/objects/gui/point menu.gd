@@ -31,12 +31,16 @@ func openObject(object):
 	
 	if object.type=="waiting":
 		show_waiting_settings()
-		
 	if object.type=="meeting":
 		show_meeting_settings()
 	if object.type=="spinning":
 		show_spinning_settings()
-		
+	
+	if object.type=="takeoff":
+		show_takeoff_settings()
+	
+	
+	
 	$VBoxContainer/PanelContainer/VBoxContainer/meeting_container/LineEdit.text=self.objectSelected.name_meeting
 
 	
@@ -108,8 +112,16 @@ func show_waiting_settings():
 		
 	$VBoxContainer/PanelContainer/VBoxContainer/waiting_container.visible=true
 	$VBoxContainer/PanelContainer/VBoxContainer/meeting_container.visible=false
+	
+func show_takeoff_settings():
+	$VBoxContainer/PanelContainer/VBoxContainer/check_spinning.set_pressed_no_signal(false)
+	$VBoxContainer/PanelContainer/VBoxContainer/check_waiting.set_pressed_no_signal(false)
+	$VBoxContainer/PanelContainer/VBoxContainer/check_meeting.set_pressed_no_signal(false)
 		
-		
+	$VBoxContainer/PanelContainer/VBoxContainer/check_waiting.disabled=true
+	$VBoxContainer/PanelContainer/VBoxContainer/check_spinning.disabled=true
+	$VBoxContainer/PanelContainer/VBoxContainer/check_meeting.disabled=true
+
 func _on_check_waiting_toggled(button_pressed):
 	if button_pressed:
 		self.objectSelected.type="waiting"

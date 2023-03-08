@@ -76,6 +76,17 @@ func addPoint(coords):
 	newPoint.deselectObject()
 	self.renderLine()
 
+func copy_point(coords):
+	var newPoint = self.pointScene.instance()
+	var prevNode = self.getLastPoint()
+	self.points.add_child(newPoint)
+	newPoint.global_transform.origin = Vector3(coords.x,coords.y, coords.z)	
+	newPoint.type="base"
+	newPoint.deselectObject()
+	self.renderLine()
+
+
+
 func addspinningpoint():
 	var prevNode = self.getLastPoint()
 	prevNode.type="spinning"

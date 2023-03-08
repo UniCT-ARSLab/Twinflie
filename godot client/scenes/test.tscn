@@ -1,4 +1,4 @@
-[gd_scene load_steps=12 format=2]
+[gd_scene load_steps=13 format=2]
 
 [ext_resource path="res://objects/gui/AddingPointMenu.tscn" type="PackedScene" id=1]
 [ext_resource path="res://objects/MousePointer.tscn" type="PackedScene" id=2]
@@ -9,6 +9,7 @@
 [ext_resource path="res://objects/Floor.tscn" type="PackedScene" id=7]
 [ext_resource path="res://objects/gui/point menu.tscn" type="PackedScene" id=8]
 [ext_resource path="res://scenes/AnchorContainer.gd" type="Script" id=9]
+[ext_resource path="res://objects/gui/anchorGUI.tscn" type="PackedScene" id=10]
 
 [sub_resource type="ProceduralSky" id=1]
 sky_top_color = Color( 0.321569, 0.529412, 0.847059, 1 )
@@ -118,6 +119,9 @@ visible = false
 visible = false
 
 [node name="point menu" parent="GUIContainer" instance=ExtResource( 8 )]
+visible = false
+
+[node name="Anchor menu" parent="GUIContainer" instance=ExtResource( 10 )]
 visible = false
 
 [node name="AnchorContainer" type="Spatial" parent="."]

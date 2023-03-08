@@ -7,10 +7,9 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -220.0
-margin_top = -232.0
-margin_right = -3.0
-margin_bottom = 49.0
+margin_left = -217.0
+margin_top = -140.5
+margin_bottom = 140.5
 input_pass_on_modal_close_click = false
 size_flags_vertical = 3
 script = ExtResource( 1 )
@@ -29,8 +28,8 @@ size_flags_vertical = 3
 alignment = 1
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
-margin_right = 218.0
-margin_bottom = 364.0
+margin_right = 215.0
+margin_bottom = 268.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -38,49 +37,50 @@ __meta__ = {
 [node name="VBoxContainer" type="VBoxContainer" parent="VBoxContainer/PanelContainer"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 211.0
-margin_bottom = 357.0
+margin_right = 208.0
+margin_bottom = 261.0
 custom_constants/separation = 8
 alignment = 1
 
 [node name="DroneName" type="Label" parent="VBoxContainer/PanelContainer/VBoxContainer"]
-margin_right = 204.0
+margin_right = 201.0
 margin_bottom = 14.0
 text = "Drone name"
 align = 1
 
 [node name="DeleteLastPoint" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer"]
 margin_top = 22.0
-margin_right = 204.0
+margin_right = 201.0
 margin_bottom = 62.0
 rect_min_size = Vector2( 0, 40 )
 text = "Delete last Point"
 
 [node name="ClearPoints" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer"]
 margin_top = 70.0
-margin_right = 204.0
+margin_right = 201.0
 margin_bottom = 110.0
 rect_min_size = Vector2( 0, 40 )
 text = "Clear all Points"
 
 [node name="LandingPoint" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer"]
 margin_top = 118.0
-margin_right = 204.0
+margin_right = 201.0
 margin_bottom = 158.0
 rect_min_size = Vector2( 0, 40 )
 text = "Add Landing Point"
 
 [node name="spinningpoint" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+visible = false
 margin_top = 166.0
-margin_right = 204.0
+margin_right = 201.0
 margin_bottom = 206.0
 rect_min_size = Vector2( 0, 40 )
 text = "Add Spinning Point"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer"]
-margin_top = 214.0
-margin_right = 204.0
-margin_bottom = 254.0
+margin_top = 166.0
+margin_right = 201.0
+margin_bottom = 206.0
 
 [node name="TakeoffPoint" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer"]
 margin_right = 123.0
@@ -97,6 +97,7 @@ value = 1.0
 suffix = "m"
 
 [node name="HBoxContainer2" type="HBoxContainer" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+visible = false
 margin_top = 262.0
 margin_right = 204.0
 margin_bottom = 302.0
@@ -116,9 +117,9 @@ value = 1.0
 suffix = "s"
 
 [node name="SavePoints" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer"]
-margin_top = 310.0
-margin_right = 204.0
-margin_bottom = 350.0
+margin_top = 214.0
+margin_right = 201.0
+margin_bottom = 254.0
 rect_min_size = Vector2( 0, 40 )
 text = "Save Points"
 

@@ -22,7 +22,7 @@ margin_bottom = -1.016
 alignment = 1
 
 [node name="HBoxContainer" type="HBoxContainer" parent="VBoxContainer"]
-margin_right = 559.0
+margin_right = 698.0
 margin_bottom = 40.0
 size_flags_horizontal = 3
 size_flags_vertical = 3
@@ -71,7 +71,14 @@ margin_right = 559.0
 margin_bottom = 40.0
 text = "set floor"
 
+[node name="set anchor" type="Button" parent="VBoxContainer/HBoxContainer"]
+margin_left = 563.0
+margin_right = 698.0
+margin_bottom = 40.0
+text = "set anchor position"
+
 [connection signal="value_changed" from="VBoxContainer/HBoxContainer/Slider" to="." method="_on_Slider_value_changed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/PlayButton" to="." method="_on_PlayButton_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/start navigation" to="." method="_on_Button_start_real_pressed"]
 [connection signal="pressed" from="VBoxContainer/HBoxContainer/set floor" to="." method="_on_set_floor_pressed"]
+[connection signal="pressed" from="VBoxContainer/HBoxContainer/set anchor" to="." method="_on_set_anchor_pressed"]

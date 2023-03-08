@@ -102,6 +102,7 @@ collision_mask = 2
 
 [node name="CollisionShape" type="CollisionShape" parent="Path/PathFollow/CollisionArea"]
 transform = Transform( -7.54979e-08, -4.37114e-08, 1, 1.50996e-07, -1, -4.37114e-08, 1, 1.50996e-07, 7.54979e-08, 0, -0.000780417, 0 )
+visible = false
 shape = SubResource( 9 )
 
 [node name="MeshInstance" type="MeshInstance" parent="Path/PathFollow/CollisionArea/CollisionShape"]

@@ -1,6 +1,6 @@
 [gd_scene load_steps=2 format=2]
 
-[ext_resource path="res://objects/gui/input_url.gd" type="Script" id=1]
+[ext_resource path="res://objects/gui/input_file_name_import_nav.gd" type="Script" id=1]
 
 [node name="input_url" type="Control"]
 anchor_right = 1.0
@@ -17,9 +17,9 @@ anchor_left = 0.5
 anchor_top = 0.5
 anchor_right = 0.5
 anchor_bottom = 0.5
-margin_left = -160.0
+margin_left = -140.5
 margin_top = -31.0
-margin_right = 160.0
+margin_right = 140.5
 margin_bottom = 31.0
 grow_horizontal = 2
 grow_vertical = 2
@@ -27,51 +27,51 @@ size_flags_horizontal = 3
 size_flags_vertical = 3
 
 [node name="Panel" type="PanelContainer" parent="container"]
-margin_right = 319.0
+margin_right = 408.0
 margin_bottom = 62.0
 
 [node name="VBoxContainer" type="VBoxContainer" parent="container/Panel"]
 margin_left = 7.0
 margin_top = 7.0
-margin_right = 312.0
+margin_right = 401.0
 margin_bottom = 55.0
 
 [node name="HBoxContainer2" type="HSplitContainer" parent="container/Panel/VBoxContainer"]
-margin_right = 305.0
+margin_right = 394.0
 margin_bottom = 20.0
 size_flags_horizontal = 3
 split_offset = 100
 
-[node name="Label" type="Label" parent="container/Panel/VBoxContainer/HBoxContainer2"]
+[node name="label" type="Label" parent="container/Panel/VBoxContainer/HBoxContainer2"]
 margin_top = 3.0
-margin_right = 248.0
+margin_right = 310.0
 margin_bottom = 17.0
-text = "Type the URI of the drone"
+text = "Type the name of the file to save"
 
-[node name="Button" type="Button" parent="container/Panel/VBoxContainer/HBoxContainer2"]
-margin_left = 260.0
-margin_right = 305.0
+[node name="abort" type="Button" parent="container/Panel/VBoxContainer/HBoxContainer2"]
+margin_left = 322.0
+margin_right = 394.0
 margin_bottom = 20.0
 grow_horizontal = 0
 text = "abort"
 
 [node name="HBoxContainer" type="HBoxContainer" parent="container/Panel/VBoxContainer"]
 margin_top = 24.0
-margin_right = 305.0
+margin_right = 394.0
 margin_bottom = 48.0
 alignment = 1
 
-[node name="Button" type="Button" parent="container/Panel/VBoxContainer/HBoxContainer"]
-margin_right = 101.0
+[node name="enter name" type="Button" parent="container/Panel/VBoxContainer/HBoxContainer"]
+margin_right = 110.0
 margin_bottom = 24.0
-text = "connect to url"
+text = "Save navigation"
 
 [node name="LineEdit" type="LineEdit" parent="container/Panel/VBoxContainer/HBoxContainer"]
-margin_left = 105.0
-margin_right = 305.0
+margin_left = 114.0
+margin_right = 394.0
 margin_bottom = 24.0
-text = "radio:__0_90_2M_E7E7E7E702"
+text = "C:\\Users\\cicci\\Documents\\nome_file.json"
 expand_to_text_length = true
 
-[connection signal="pressed" from="container/Panel/VBoxContainer/HBoxContainer2/Button" to="." method="_on_abort"]
-[connection signal="pressed" from="container/Panel/VBoxContainer/HBoxContainer/Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="container/Panel/VBoxContainer/HBoxContainer2/abort" to="." method="_on_abort_pressed"]
+[connection signal="pressed" from="container/Panel/VBoxContainer/HBoxContainer/enter name" to="." method="_on_enter_name_pressed"]

@@ -1,12 +1,10 @@
 extends Control
 
+onready var input_file = preload("res://objects/gui/input_file_name.tscn")
+onready var input_file_import_nav = preload("res://objects/gui/input_file_name_import_nav.tscn")
 
 onready var labelName = $VBoxContainer/PanelContainer/VBoxContainer/DroneName
 var objectSelected:Node = null
-
-# Called when the node enters the scene tree for the first time.
-func _ready():
-	pass # Replace with function body.
 
 
 func openObject(object):
@@ -47,4 +45,19 @@ func _on_Button_pressed():
 
 func _on_syncronyze_position_pressed():
 	self.objectSelected.sync_pos()
+	pass # Replace with function body.
+
+
+
+
+
+func _on_save_nav_pressed():
+	
+	get_tree().get_root().add_child(input_file.instance())
+	
+	pass # Replace with function body.
+
+
+func _on_import_nav_pressed():
+	get_tree().get_root().add_child(input_file_import_nav.instance())
 	pass # Replace with function body.

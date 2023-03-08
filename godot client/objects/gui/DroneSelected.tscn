@@ -7,10 +7,8 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -137.0
-margin_top = -93.0
-margin_right = -9.0
-margin_bottom = 92.0
+margin_top = -300.0
+margin_bottom = 300.0
 mouse_filter = 2
 size_flags_vertical = 3
 script = ExtResource( 1 )
@@ -20,20 +18,17 @@ anchor_left = 1.0
 anchor_top = 0.5
 anchor_right = 1.0
 anchor_bottom = 0.5
-margin_left = -126.0
-margin_top = -90.0
-margin_bottom = 90.0
+margin_left = -154.0
+margin_top = -154.0
+margin_bottom = 154.0
 grow_horizontal = 0
 size_flags_horizontal = 3
 size_flags_vertical = 3
 alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="PanelContainer" type="PanelContainer" parent="VBoxContainer"]
 margin_right = 154.0
-margin_bottom = 252.0
+margin_bottom = 308.0
 __meta__ = {
 "_edit_use_anchors_": false
 }
@@ -42,7 +37,7 @@ __meta__ = {
 margin_left = 7.0
 margin_top = 7.0
 margin_right = 147.0
-margin_bottom = 245.0
+margin_bottom = 301.0
 custom_constants/separation = 8
 alignment = 1
 
@@ -110,9 +105,23 @@ max_value = 10.0
 step = 0.5
 value = 1.0
 
+[node name="save nav" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+margin_top = 246.0
+margin_right = 140.0
+margin_bottom = 266.0
+text = "Save Navigation"
+
+[node name="import nav" type="Button" parent="VBoxContainer/PanelContainer/VBoxContainer"]
+margin_top = 274.0
+margin_right = 140.0
+margin_bottom = 294.0
+text = "Import Navigation"
+
 [connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/EditPath" to="." method="_on_EditPath_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/Add Points" to="." method="_on_Add_Points_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/Delete" to="." method="_on_Delete_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/Deselect" to="." method="_on_Deselect_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/syncronyze position" to="." method="_on_syncronyze_position_pressed"]
 [connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/HBoxContainer/Button" to="." method="_on_Button_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/save nav" to="." method="_on_save_nav_pressed"]
+[connection signal="pressed" from="VBoxContainer/PanelContainer/VBoxContainer/import nav" to="." method="_on_import_nav_pressed"]

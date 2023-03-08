@@ -17,7 +17,7 @@ font_path = "res://assets/fonts/Robot_Font.otf"
 outline_size = 1
 font_data = SubResource( 6 )
 
-[node name="Anchor" type="Spatial"]
+[node name="Anchor" type="Spatial" groups=["anchor"]]
 script = ExtResource( 1 )
 
 [node name="Mesh" type="MeshInstance" parent="."]
@@ -33,7 +33,7 @@ shape = SubResource( 5 )
 
 [node name="Label" type="Label3D" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00291601, 0.0405222, 0.00091707 )
-pixel_size = 0.0015
+pixel_size = 0.003
 billboard = 1
 text = "Anchor x"
 font = SubResource( 7 )

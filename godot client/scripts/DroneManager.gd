@@ -33,5 +33,7 @@ func _http_request_completed(result, response_code, headers, body):
 		var caricamento=loading.instance()
 		get_tree().get_root().add_child(caricamento)
 		get_tree().get_root().get_node("World/AnchorContainer").make_req()
+	else:
+		get_tree().get_root().remove_child(get_tree().get_root().get_node("Loading_screen"))
 	
 	num=num+1

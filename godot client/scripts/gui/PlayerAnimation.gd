@@ -66,7 +66,7 @@ func _on_PlayButton_pressed():
 		if !object.is_in_group("TouchPoints"):
 			self.objects.append(object)
 			
-			var json =object.generate_route(route)
+			var json =object.generate_route()
 			route[object.objectName]=json[object.objectName]
 			
 			var http=HTTPRequest.new()
@@ -145,3 +145,27 @@ func _on_set_floor_pressed():
 	
 	
 	pass # Replace with function body.
+
+
+func _on_set_anchor_pressed():
+	
+	 
+	
+	var position={}
+	
+	for object in get_tree().get_nodes_in_group("anchor"):
+		var id=object.label.text.replace("Anchor ","")
+		position[id]={x=object.global_transform.origin.x,y=object.global_transform.origin.y,z=object.global_transform.origin.z}
+		
+		object.deselectObject();
+		
+	print(position)
+	
+	var http=HTTPRequest.new()
+	add_child(http)
+	var headers = ["Content-Type: application/json"]
+	print(JSON.print(route))
+	http.request("http://localhost:5000/set_anchor_pos", headers, false, HTTPClient.METHOD_POST, JSON.print(position))
+	yield(http, "request_completed")
+	remove_child(http)
+	

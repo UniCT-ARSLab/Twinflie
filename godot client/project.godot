@@ -41,7 +41,7 @@ config/icon="res://icon.png"
 SelectionManager="*res://scripts/SelectionManager.gd"
 GuiManager="*res://scripts/GUIManager.gd"
 SceneManager="*res://scripts/SceneManager.gd"
-SceneManagerNetwork="*res://scripts/network_scene/SceneManager.gd"
+SceneManagerNetwork="res://scripts/network_scene/SceneManager.gd"
 DroneManager="*res://scripts/DroneManager.gd"
 
 [display]

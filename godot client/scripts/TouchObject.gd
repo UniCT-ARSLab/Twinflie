@@ -67,7 +67,7 @@ func _process(delta):
 	if udp.get_available_packet_count()>0:
 		var array_bytes = udp.get_packet()
 		dict=JSON.parse(array_bytes.get_string_from_ascii().replace("'",'"').replace("(","").replace(")","")).result
-		print(dict)
+		
 		pos_x=float(dict[objectName].split(",")[0])
 		pos_y=float(dict[objectName].split(",")[2])
 		pos_z=float(dict[objectName].split(",")[1])
@@ -163,7 +163,7 @@ func _ready():
 	
 	var array_bytes = udp.get_packet()
 	dict=JSON.parse(array_bytes.get_string_from_ascii().replace("'",'"').replace("(","").replace(")","")).result
-	print(dict)
+	
 	pos_x=float(dict[objectName].split(",")[0])
 	pos_y=float(dict[objectName].split(",")[2])
 	pos_z=float(dict[objectName].split(",")[1])
@@ -193,7 +193,7 @@ func deselectObject():
 	self.selected = false
 	
 	
-func generate_route(route):
+func generate_route():
 	var punti=pathLine.getAllPoints()
 	
 	var json={}
@@ -304,3 +304,29 @@ func _on_CollisionArea_area_entered(area):
 		DroneManager.emit_signal("drone_collided")
 	
 	pass # Replace with function body.
+
+func import_route(route):
+	
+	var json=JSON.parse(route).result
+	self.get_node("PathLine").clearPoints()
+	for point in json[self.objectName]:
+		
+		if point["name"]=="punto_0":
+			continue
+			
+		var cord=point["coordinate"]
+		print(cord)
+		cord=cord.replace("(","").replace(")","").replace(" ","")
+		cord=cord.split(",")
+		print(typeof(cord[0]))
+		
+		self.pathLine.copy_point(Vector3(float(cord[0]),float(cord[1]),float(cord[2])))
+		
+		
+		self.pathLine.getLastPoint().type=point["type"]
+		self.pathLine.getLastPoint().time=point["pause_time"]
+		self.pathLine.getLastPoint().name_meeting=point["meeting_name"]
+		
+	pass
+	
+
