@@ -1,4 +1,4 @@
-[gd_scene load_steps=17 format=2]
+[gd_scene load_steps=18 format=2]
 
 [ext_resource path="res://assets/models/lowpoly_drone/mat23.material" type="Material" id=1]
 [ext_resource path="res://scripts/TouchObject.gd" type="Script" id=2]
@@ -8,6 +8,7 @@
 [ext_resource path="res://assets/models/lowpoly_drone/mat5.material" type="Material" id=6]
 [ext_resource path="res://objects/TouchObject.tres" type="ArrayMesh" id=7]
 [ext_resource path="res://objects/crazyflie.tscn" type="PackedScene" id=8]
+[ext_resource path="res://objects/drone_upper_lay.tscn" type="PackedScene" id=9]
 
 [sub_resource type="ArrayMesh" id=2]
 surfaces/0 = {
@@ -61,8 +62,8 @@ radius = 0.18
 
 [sub_resource type="Skin" id=11]
 
-[sub_resource type="ViewportTexture" id=1]
-viewport_path = NodePath("Viewport")
+[sub_resource type="ViewportTexture" id=12]
+viewport_path = NodePath("Path/PathFollow/Viewport")
 
 [sub_resource type="SpatialMaterial" id=7]
 albedo_color = Color( 1, 1, 1, 0.27451 )
@@ -115,55 +116,23 @@ skin = SubResource( 11 )
 transform = Transform( 0.005, 0, 0, 0, 0.005, 0, 0, 0, 0.005, 0, 0, 0 )
 visible = false
 
-[node name="Viewport" type="Viewport" parent="Path/PathFollow"]
-size = Vector2( 180, 50 )
-size_override_stretch = true
-transparent_bg = true
-render_target_v_flip = true
-
-[node name="Panel" type="Panel" parent="Path/PathFollow/Viewport"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -158.5
-margin_top = -34.0
-margin_right = 158.5
-margin_bottom = 34.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="HBoxContainer" type="HBoxContainer" parent="Path/PathFollow/Viewport/Panel"]
-anchor_left = 0.5
-anchor_top = 0.5
-anchor_right = 0.5
-anchor_bottom = 0.5
-margin_left = -158.0
-margin_top = -32.5
-margin_right = 158.0
-margin_bottom = 32.5
-alignment = 1
-__meta__ = {
-"_edit_use_anchors_": false
-}
-
-[node name="Label" type="Label" parent="Path/PathFollow/Viewport/Panel/HBoxContainer"]
-margin_left = 92.0
-margin_top = 25.0
-margin_right = 223.0
-margin_bottom = 39.0
-text = "NOMEEEEEEEEEEEEEE"
-align = 1
-valign = 1
+[node name="crazyflie" parent="Path/PathFollow" instance=ExtResource( 8 )]
 
 [node name="Sprite3D" type="Sprite3D" parent="Path/PathFollow"]
-transform = Transform( 0.254277, 0, 0, 0, 0.221456, 0, 0, 0, 1, -0.000161648, 0.160334, 0.00132465 )
-visible = false
+transform = Transform( 0.5, 0, 0, 0, 0.5, 0, 0, 0, 0.5, 0, 0.148348, 0 )
 billboard = 1
-texture = SubResource( 1 )
+double_sided = false
+texture = SubResource( 12 )
 
-[node name="crazyflie" parent="Path/PathFollow" instance=ExtResource( 8 )]
+[node name="Viewport" type="Viewport" parent="Path/PathFollow"]
+size = Vector2( 200, 400 )
+transparent_bg = true
+hdr = false
+usage = 0
+render_target_v_flip = true
+gui_disable_input = true
+
+[node name="drone_upper_lay" parent="Path/PathFollow/Viewport" instance=ExtResource( 9 )]
 
 [node name="FloorRaycast" type="RayCast" parent="."]
 transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.0442128, 0 )

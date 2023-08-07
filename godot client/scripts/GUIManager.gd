@@ -54,3 +54,14 @@ func show_anchor_menu(point):
 	
 func hide_anchor_menu():
 	GUI_CONTAINER.get_node("Anchor menu").closeObject()
+	
+	
+func create_alert(text: String, title: String='Message') -> void:
+	var dialog = AcceptDialog.new()
+	dialog.dialog_text = text
+	dialog.window_title = title
+	dialog.connect('popup_hide', dialog, 'queue_free')
+	var scene_tree = Engine.get_main_loop()
+	scene_tree.current_scene.add_child(dialog)
+	dialog.popup_centered()
+	

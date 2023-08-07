@@ -46,6 +46,7 @@ DroneManager="*res://scripts/DroneManager.gd"
 
 [display]
 
+window/size/fullscreen=true
 window/stretch/aspect="expand"
 
 [editor_plugins]

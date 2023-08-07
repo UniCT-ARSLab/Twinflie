@@ -1,4 +1,5 @@
 import threading
+import time
 
 from flask import Flask
 import socket
@@ -7,6 +8,7 @@ from gevent.pywsgi import WSGIServer
 from flask import request
 
 from classes.drones_collection import drones_collection as Drone_collector
+
 
 global udp_listener
 udp_listener=[]
@@ -20,10 +22,8 @@ app = Flask(__name__)
 @app.route('/connect_to/url/<url>')
 def url_connect(url):
     url=url.replace("_","/")
-    
-    drone=drones.add_drone(url)
-
-    return "tutto fatto"
+    print("connessione")
+    return drones.add_drone(url)
     
 
 def UDP_listener():
@@ -67,10 +67,7 @@ def UDP_sender():
     while True:
         
         time.sleep(0.2)
-        global droni
-        
         msg_to_send=drones.generate_json_all_drones_positions()
-        
         lock_udp.acquire()
         for dest in udp_listener:
             UDPServerSocket.sendto(str.encode(msg_to_send), dest)
@@ -100,10 +97,8 @@ def route():
 
 @app.route("/set_anchor_pos",methods = ['POST'])
 def set_anchor_pos():
-    print("set ancore")
     data=request.get_json()
     response=drones.set_anchor_position(data)
-    
     return str(response)
 
 @app.route("/reset_estimation")

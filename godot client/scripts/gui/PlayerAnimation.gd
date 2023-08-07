@@ -62,6 +62,7 @@ func _on_PlayButton_pressed():
 	GuiManager.hide_point_menu()
 	GuiManager.hideDroneSelected()
 	var counter=0
+	self.objects.empty()
 	for object in get_tree().get_nodes_in_group("TouchObjects"):
 		if !object.is_in_group("TouchPoints"):
 			self.objects.append(object)
@@ -69,14 +70,6 @@ func _on_PlayButton_pressed():
 			var json =object.generate_route()
 			route[object.objectName]=json[object.objectName]
 			
-			var http=HTTPRequest.new()
-			add_child(http)
-			
-			var headers = ["Content-Type: application/json"]
-			print(JSON.print(route))
-			http.request("http://localhost:5000/route", headers, false, HTTPClient.METHOD_POST, JSON.print(route))
-			yield(http, "request_completed")
-			remove_child(http)
 			
 			object.generatePath()
 			object.deselectObject()
@@ -86,6 +79,15 @@ func _on_PlayButton_pressed():
 			counter+=lenght
 			#object.disableObject()
 			
+			
+	var http=HTTPRequest.new()
+	add_child(http)
+			
+	var headers = ["Content-Type: application/json"]
+	http.request("http://localhost:5000/route", headers, false, HTTPClient.METHOD_POST, JSON.print(route))
+	yield(http, "request_completed")
+	remove_child(http)
+					
 	self.progress.set_max(counter)
 	self.slider.set_max(counter)
 	self.PathLenght=counter
@@ -125,6 +127,22 @@ func _http_request_completed(result, response_code, headers, body):
 	
 func _on_Button_start_real_pressed():
 	
+	for object in get_tree().get_nodes_in_group("TouchObjects"):
+		if !object.is_in_group("TouchPoints"):
+			self.objects.append(object)
+			
+			var json =object.generate_route()
+			route[object.objectName]=json[object.objectName]
+
+
+	var http=HTTPRequest.new()
+	add_child(http)
+			
+	var headers = ["Content-Type: application/json"]
+	http.request("http://localhost:5000/route", headers, false, HTTPClient.METHOD_POST, JSON.print(route))
+	yield(http, "request_completed")
+	remove_child(http)
+	
 	http=HTTPRequest.new()
 	add_child(http)
 	http.connect("request_completed", self, "_http_request_completed")
@@ -155,7 +173,7 @@ func _on_set_anchor_pressed():
 	
 	for object in get_tree().get_nodes_in_group("anchor"):
 		var id=object.label.text.replace("Anchor ","")
-		position[id]={x=object.global_transform.origin.x,y=object.global_transform.origin.y,z=object.global_transform.origin.z}
+		position[id]={x=object.global_transform.origin.x,y=object.global_transform.origin.y,z=object.global_transform.origin.z*-1}
 		
 		object.deselectObject();
 		
@@ -169,3 +187,7 @@ func _on_set_anchor_pressed():
 	yield(http, "request_completed")
 	remove_child(http)
 	
+
+
+func _on_stop_test_pressed():
+	end_simulation(false)

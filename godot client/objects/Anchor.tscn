@@ -14,7 +14,8 @@ antialiased = false
 font_path = "res://assets/fonts/Robot_Font.otf"
 
 [sub_resource type="DynamicFont" id=7]
-outline_size = 1
+size = 64
+outline_size = 4
 font_data = SubResource( 6 )
 
 [node name="Anchor" type="Spatial" groups=["anchor"]]
@@ -32,7 +33,7 @@ transform = Transform( 0.02, 0, 0, 0, 0.02, 0, 0, 0, 0.02, 0, 0, 0 )
 shape = SubResource( 5 )
 
 [node name="Label" type="Label3D" parent="."]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00291601, 0.0405222, 0.00091707 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, -0.00291601, 0.118402, 0.00091707 )
 pixel_size = 0.003
 billboard = 1
 text = "Anchor x"

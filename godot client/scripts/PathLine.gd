@@ -6,6 +6,7 @@ onready var lineDrawer = $LineRenderer
 onready var lineDrawerGhost = $LineRendererGhost
 
 onready var pointScene = preload("res://objects/PathPoint.tscn")
+var counter_point=0
 
 # Called when the node enters the scene tree for the first time.
 func _ready():
@@ -34,6 +35,7 @@ func clearGhostLine():
 	
 	
 func clearPoints():
+	self.counter_point=0
 	var first = self.lineDrawer.points.pop_front()
 	self.lineDrawerGhost.points.clear()
 	self.lineDrawer.points.clear()
@@ -73,7 +75,12 @@ func addPoint(coords):
 	else:
 		newPoint.global_transform.origin = Vector3(coords.x, get_parent().global_transform.origin.y, coords.z)	
 	newPoint.type="base"
+	newPoint.type="meeting"
+	newPoint.name_meeting="Meet_"+str(self.counter_point)
+	self.counter_point+=1
+	
 	newPoint.deselectObject()
+	
 	self.renderLine()
 
 func copy_point(coords):
@@ -134,6 +141,7 @@ func removeLastNode():
 	self.lineDrawer.points.pop_back()
 	var node = self.points.get_child(self.points.get_child_count() - 1)
 	self.points.remove_child(node)
+	self.counter_point-=1
 	self.renderLine()
 	node.queue_free()
 	

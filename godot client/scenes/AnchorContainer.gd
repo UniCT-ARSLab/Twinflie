@@ -23,15 +23,16 @@ func _http_request_completed(result, response_code, headers, body):
 	var response = parse_json(body.get_string_from_utf8().replace("(","").replace(")",""))
 
 	if response["status"]=="drone correctly connected":
-		for i in range(0,8):
+		response.erase("status")
+		for i in response.keys():
 			var objAnchor = anchor.instance()
 			add_child(objAnchor)
 			objAnchor.updateLabel("Anchor "+str(i))
 			ancore.append(objAnchor)
 			
-			objAnchor.global_transform.origin.x=float(response[str(i)]["pos"].split(",")[0])
-			objAnchor.global_transform.origin.y=float(response[str(i)]["pos"].split(",")[2])
-			objAnchor.global_transform.origin.z=float(response[str(i)]["pos"].split(",")[1])
+			objAnchor.global_transform.origin.x=float(response[i]["pos"].split(",")[0])
+			objAnchor.global_transform.origin.y=float(response[i]["pos"].split(",")[2])
+			objAnchor.global_transform.origin.z=float(response[i]["pos"].split(",")[1]) * -1
 			
 			print(i," ",float(response[str(i)]["pos"].split(",")[0])," ",float(response[str(i)]["pos"].split(",")[1])," ",float(response[str(i)]["pos"].split(",")[2]))
 		

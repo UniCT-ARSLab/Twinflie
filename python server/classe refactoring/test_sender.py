@@ -97,15 +97,18 @@ def UDP_sender():
     
     while True:
         
-        pos={}
+        info={}
         global num
         global droni
         for url,drone in droni.items():
             pos_tupla=(random.uniform(1,-1),1,random.uniform(-1,0.1))
-            pos[url]=str(pos_tupla)
-        
+            
+            
+            info[url]["position"]=str(pos_tupla)
+            info[url]["status"]="connected"
+            info[url]["battery"]=100
         for dest in udp_listener:
-            UDPServerSocket.sendto(str.encode(str(pos)), dest)
+            UDPServerSocket.sendto(str.encode(str(info)), dest)
             
         time.sleep(1)
         

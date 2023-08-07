@@ -34,7 +34,8 @@ class UAV :
         self.scf = None
         self.mc = None
         self.pc = None
-
+        #status: connected, disconnected
+        self.status="connected"
         self.positionEstimated = False
 
         self.logConf = LogConfig(name='Position', period_in_ms=100)
@@ -70,7 +71,7 @@ class UAV :
         self.z = 0
         self.starting_z=None
         
-        self.battery = None
+        self.battery = 0
         self.roll = None
         self.pitch = None 
         self.yaw = 0
@@ -78,6 +79,7 @@ class UAV :
         self.origin = None
         self.flag=True
         self.controller_inizialized=False
+        self.connected = False
         
         self.events.on(UAVEvents.POSITION_READY,self.initialize_controller)
         
@@ -156,14 +158,13 @@ class UAV :
         print(self.uri,"estimator resetted")
         
         
-        
-
     #events
     # Called when the link is established and the TOCs (that are not cached)
     # have been downloaded
     
     def _on_connected(self, uri):
         print("UAV Connected,", uri)
+        self.connected = True
         #self.crazyflie.log.add_config(self.logConf)
         self.scf = SyncCrazyflie(self.uri, self.crazyflie)
         self.crazyflie.log.add_config(self.logConfEstimation)
@@ -178,12 +179,14 @@ class UAV :
     
     def _on_disconnected(self, uri):
         self.events.emit(UAVEvents.DISCONNECTED, self)
+        self.status="disconnected"
         print("Drone Disconnected", uri)
         pass
 
     # Called on unintentional disconnect only
     def _on_connection_lost(self, uri, message):
-        self.events.emit(UAVEvents.CONNECTION_LOST, self)
+        #self.events.emit(UAVEvents.CONNECTION_LOST, self)
+        #self.status="disconnected"
         print("Connection Lost", uri)
         pass
 
@@ -195,6 +198,7 @@ class UAV :
     # Called if establishing of the link fails (i.e times out)
     def _on_connection_failed(self, uri ,error):
         print("errore connessione")
+        self.status="disconnected"
         self.events.emit(UAVEvents.CONNECTION_FAILED, self, error)
         print(error)
         pass
@@ -217,22 +221,7 @@ class UAV :
         self.y = data['kalman.stateY']
         self.z = data['kalman.stateZ']
         self.battery = data['pm.vbat']
-        
-        #print(self.uri,self.battery)
-        # self.roll = data['stabilizer.roll']
-        # self.pitch = data['stabilizer.pitch']
-        # self.yaw = data['stabilizer.yaw']
-        
-        #print("x:",self.x,"y:",self.y,"z:",self.z)
-        
-        #print("yaw:",self.yaw)
-        
-        #print("roll:",self.roll,"pitch:",self.pitch,"yaw:",data['stabilizer.yaw'])
-            
-        # if self.positionEstimatedEmitted is not True:
-        #     self.positionEstimatedEmitted = True
-        #     self.events.emit(UAVEvents.POSITION_READY)
-        # print ("[%d][%s]: %s" % (timestamp, logconf.name, data))
+
         pass
 
     def _on_data_estimation_received(self, timestamp, data, logconf):
@@ -267,7 +256,6 @@ class UAV :
         print("Estimation Completed")
         self.positionEstimated = True
         self.positionEstimatedEmitted = False
-        
         self.crazyflie.log.add_config(self.logConf)
         self.logConf.start()
         
@@ -276,15 +264,10 @@ class UAV :
 
     def initialize_controller(self):
         self.starting_z=self.z
-        
         self.mc = MotionCommander(crazyflie = self.scf, default_height = UAV.DEFAULT_HEIGHT)
-        
-        """self.pc = PositionHlCommander(crazyflie = self.scf, x=self.x, y=self.y, z=self.z, \
-                                    default_height = self.z+UAV.DEFAULT_HEIGHT, default_velocity = UAV.DEFAULT_SPEED,\
-                                    default_landing_height=self.z)
-       """ 
         self.events.emit(UAVEvents.CONTROLLER_READY, self)
         
+
     def _register_callbacks(self):
         self.crazyflie.connected.add_callback(self._on_connected)
         self.crazyflie.disconnected.add_callback(self._on_disconnected)

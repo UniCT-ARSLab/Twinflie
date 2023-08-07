@@ -8,8 +8,7 @@ export var active:bool = true
 export var objectName = "No Name"
 
 onready var outline = $Path/PathFollow/Mesh/Outline
-onready var label = $Path/PathFollow/Viewport/Panel/HBoxContainer/Label
-
+onready var upper_lay= $Path/PathFollow/Viewport/drone_upper_lay
 onready var sprite3d = $Path/PathFollow/Sprite3D
 onready var gizmoTool = $Path/PathFollow/GizmoTool
 onready var pathLine = $PathLine
@@ -50,6 +49,7 @@ var waiting_list=[]
 
 var sync_timer=10
 var sync_flag=false
+var counter_point=0
 
 func _process(delta):
 	
@@ -65,12 +65,21 @@ func _process(delta):
 	self.fantasma.global_transform= self.fantasma.global_transform.interpolate_with(Transform(Vector3(1,0,0),Vector3(0,1,0),Vector3(0,0,1),pos),delta)
 
 	if udp.get_available_packet_count()>0:
+		
 		var array_bytes = udp.get_packet()
 		dict=JSON.parse(array_bytes.get_string_from_ascii().replace("'",'"').replace("(","").replace(")","")).result
 		
-		pos_x=float(dict[objectName].split(",")[0])
-		pos_y=float(dict[objectName].split(",")[2])
-		pos_z=float(dict[objectName].split(",")[1])
+		if dict[objectName]["status"]!="connected":
+			print ("remove self")
+			get_parent().remove_child(self)
+			GuiManager.create_alert(self.objectName+"cannot be reached","error on"+self.objectName)
+			
+		pos_x=float(dict[objectName]["position"].split(",")[0])
+		pos_y=float(dict[objectName]["position"].split(",")[2])
+		pos_z=float(dict[objectName]["position"].split(",")[1])*-1
+		
+		#print(float(dict[objectName]["battery"])*1000)
+		upper_lay.set_battery_value(float(dict[objectName]["battery"])*1000)
 		
 	if self.waiting>0:
 		waiting-=delta
@@ -152,10 +161,9 @@ func _process(delta):
 		
 		
 func _ready():
-	print("drone")
 	#objectName="drone_"+str(DroneManager.num)
 	self.pathLine.addPoint(self.global_transform.origin)
-	self.label.text = objectName
+	self.upper_lay.set_drone_name(objectName)
 	udp.set_dest_address("127.0.0.1", 20003)
 	udp.put_packet("subscribe".to_ascii())
 	
@@ -163,11 +171,12 @@ func _ready():
 	
 	var array_bytes = udp.get_packet()
 	dict=JSON.parse(array_bytes.get_string_from_ascii().replace("'",'"').replace("(","").replace(")","")).result
+	#print("dizionario")
+	#print(dict)
+	pos_x=float(dict[objectName]["position"].split(",")[0])
+	pos_y=float(dict[objectName]["position"].split(",")[2])
+	pos_z=float(dict[objectName]["position"].split(",")[1])*-1
 	
-	pos_x=float(dict[objectName].split(",")[0])
-	pos_y=float(dict[objectName].split(",")[2])
-	pos_z=float(dict[objectName].split(",")[1])
-
 	self.global_transform.origin.x=pos_x
 	self.global_transform.origin.y=pos_y
 	self.global_transform.origin.z=pos_z
@@ -201,7 +210,9 @@ func generate_route():
 	var i=0
 	for punto in punti:
 		
-		json[objectName].append({"name":"punto_"+str(i),"coordinate":(punto.global_transform.origin),"type":punto.type,"meeting_name":punto.name_meeting,"pause_time":punto.time})
+		var point_origin=punto.global_transform.origin
+		point_origin.z=point_origin.z*-1
+		json[objectName].append({"name":"punto_"+str(i),"coordinate":(point_origin),"type":punto.type,"meeting_name":punto.name_meeting,"pause_time":punto.time})
 		
 		i+=1
 	#print(json)
@@ -209,6 +220,7 @@ func generate_route():
 	
 func addPathPoint(point):
 	self.pathLine.addPoint(point)
+
 	
 func addTakeoffPoint(altitude):
 	self.pathLine.addTakeOffPoint(altitude)
@@ -315,12 +327,12 @@ func import_route(route):
 			continue
 			
 		var cord=point["coordinate"]
-		print(cord)
+		#print(cord)
 		cord=cord.replace("(","").replace(")","").replace(" ","")
 		cord=cord.split(",")
-		print(typeof(cord[0]))
+		#print(typeof(cord[0]))
 		
-		self.pathLine.copy_point(Vector3(float(cord[0]),float(cord[1]),float(cord[2])))
+		self.pathLine.copy_point(Vector3(float(cord[0]),float(cord[1]),float(cord[2])*-1))
 		
 		
 		self.pathLine.getLastPoint().type=point["type"]

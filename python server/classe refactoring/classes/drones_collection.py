@@ -35,11 +35,23 @@ class drones_collection():
     #callback per la connessione
     def _connesso(self,uav:UAV):
         self.drones[uav.uri]=uav
+        uav.events.on(UAVEvents.DISCONNECTED, self.remove_drone_thread)
+        uav.events.on(UAVEvents.CONNECTION_LOST, self.remove_drone_thread)
         self.lock_drones.release()
 
+    def remove_drone_thread(self,uav):
+        th = threading.Thread(target=self.remove_drone, args=([uav]))
+        th.start()
+        #time.sleep(10)
+        #th._stop()
+        
+
     #callback per segnalare che io motori sono pronti
-    def _pronto_a_partire(uav:UAV):
+    def _pronto_a_partire(self, uav:UAV):
         pass
+    def failed(self,uav,dummy):
+
+        self.lock_drones.release()
 
     #procedura che aggiunge un drone alla collezzione dei droni connessi se esso non è connesso e ritorna il drone appena connesso.
     def add_drone(self,url):
@@ -52,30 +64,55 @@ class drones_collection():
     
         uavTest = UAV(url)
 
-        uavTest.events.on(self.UAVEvents.CONNECTED,
+        uavTest.events.on(UAVEvents.CONNECTED,
                       lambda uri:
                       print("Drone Connected!", uri)
                       )
         self.lock_drones.acquire()
         uavTest.events.on(UAVEvents.CONNECTED, self._connesso)
         uavTest.events.on(UAVEvents.CONTROLLER_READY, self._pronto_a_partire)
-        
+        uavTest.events.on(UAVEvents.CONNECTION_FAILED, self.failed)
         uavTest.connect()
-        return self.drones[url]
+
+        while not uavTest.connected:
+            time.sleep(0.1)
+
+
+        if url in self.drones:
+            print("tutto ok")
+            return "tutto ok"
+        else:
+            return "connection to "+ url + " failed"
+
+    def remove_drone(self,uav):
+        print("1")
+        time.sleep(3)
+        print("2")
+        self.lock_drones.acquire()
+        self.drones.pop(uav.uri, None)
+        self.lock_drones.release()
+        print("3")
 
     #la funzione genera un json con tutte le posizioni attualmente connessi
     def generate_json_all_drones_positions(self):
         self.lock_drones.acquire()
-        pos={}
+        info={}
         
         if(len(self.drones)==0):
             all_drones_pos="no drone connected"
         else:
             for key,uav in self.drones.items():
-                pos_tupla=(uav.x,uav.y,uav.z)
-                pos[key]=str(pos_tupla)
                 
-            all_drones_pos=str(pos)
+                info[key]={}
+                pos_tupla=(uav.x,uav.y,uav.z)
+                info[key]["position"]=str(pos_tupla)
+                info[key]["status"]=uav.status
+                info[key]["battery"]=uav.battery
+
+                if uav.status=="disconnected":
+                    print("disconnected")
+
+            all_drones_pos=str(info)
         self.lock_drones.release()
         return all_drones_pos
     
@@ -212,6 +249,7 @@ class drones_collection():
 
         
         ancore = LoPoAnchor(list(self.drones.values())[0].scf.cf)
+        
         for id, pos in data.items():
             ancore.set_position(int(id), (float(pos["x"]), float(pos["z"]), float(pos["y"])))
 

@@ -44,7 +44,7 @@ transform = Transform( 0.866025, 0.25, -0.433013, 0, 0.866025, 0.5, 0.5, -0.4330
 shadow_enabled = true
 
 [node name="Floor" parent="." instance=ExtResource( 7 )]
-transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 0, -0.69, 0 )
+transform = Transform( 1, 0, 0, 0, 1, 0, 0, 0, 1, 1.64771, -0.69, -1.54664 )
 
 [node name="MousePointer" parent="." instance=ExtResource( 2 )]
 visible = false
@@ -59,9 +59,9 @@ script = ExtResource( 3 )
 sensitivity = 0.5
 
 [node name="TopCamera" type="Camera" parent="."]
-transform = Transform( 1, 0, 0, 0, -4.37114e-08, 1, 0, -1, -4.37114e-08, 0, 26.5299, 0 )
+transform = Transform( -1, -8.74228e-08, -3.82137e-15, 0, -4.37114e-08, 1, -8.74228e-08, 1, 4.37114e-08, 1.26, 26.53, -1.2 )
 projection = 1
-size = 6.0
+size = 4.5
 
 [node name="Drones" type="Spatial" parent="."]
 
