@@ -91,7 +91,8 @@ and allows, through interaction, to set the real position of the anchor. This no
 
 ## Video Demostration
 
-<iframe width="560" height="315" src="https://www.youtube.com/embed/zEM39KKYv1k?si=blwtUdr8_UCAed3u" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen></iframe>
+The video demostration is avaiable on Youtube:
+[![IMAGE ALT TEXT HERE](https://img.youtube.com/vi/zEM39KKYv1k/0.jpg)](https://www.youtube.com/watch?v=zEM39KKYv1k)
 
 ## Publications and Citations
 
